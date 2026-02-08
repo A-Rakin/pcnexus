@@ -843,3 +843,64 @@ def user_login(request):
     }
     
     return render(request, 'store/login.html', context)
+
+def product_search(request):
+    """Search products for Bangladesh market"""
+    query = request.GET.get('q', '')
+    
+    if query:
+        products = Product.objects.filter(
+            Q(name__icontains=query) |
+            Q(description__icontains=query) |
+            Q(brand__icontains=query) |
+            Q(model__icontains=query),
+            is_available=True
+        )
+    else:
+        products = Product.objects.filter(is_available=True)
+    
+    # Apply filters from request
+    min_price = request.GET.get('min_price')
+    max_price = request.GET.get('max_price')
+    category_slug = request.GET.get('category')
+    stock_status = request.GET.get('stock')
+    sort_by = request.GET.get('sort', '-created_at')
+    
+    if min_price:
+        products = products.filter(price_bdt__gte=min_price)
+    if max_price:
+        products = products.filter(price_bdt__lte=max_price)
+    
+    if category_slug:
+        products = products.filter(category__slug=category_slug)
+    
+    if stock_status == 'in_stock':
+        products = products.filter(stock_quantity__gt=0)
+    elif stock_status == 'low_stock':
+        products = products.filter(stock_quantity__gt=0, stock_quantity__lt=10)
+    
+    # Sorting
+    if sort_by == 'price_low':
+        products = products.order_by('price_bdt')
+    elif sort_by == 'price_high':
+        products = products.order_by('-price_bdt')
+    else:
+        products = products.order_by(sort_by)
+    
+    # Pagination
+    paginator = Paginator(products, 12)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    # Get categories for filter
+    categories = Category.objects.all()
+    
+    context = {
+        'products': page_obj,
+        'categories': categories,
+        'query': query,
+        'total_results': products.count(),
+        'page_title': f'Search: {query} | PC Nexus Bangladesh',
+    }
+    
+    return render(request, 'store/product_search.html', context)
