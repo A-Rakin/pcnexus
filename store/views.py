@@ -791,3 +791,55 @@ def newsletter_subscribe(request):
         messages.success(request, 'Thank you for subscribing to our newsletter!')
     
     return redirect('store:home')
+
+def user_login(request):
+    """User login view"""
+    if request.user.is_authenticated:
+        return redirect('store:home')
+    
+    if request.method == 'POST':
+        form = UserLoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(request, username=username, password=password)
+            
+            if user is not None:
+                login(request, user)
+                messages.success(request, 'Login successful!')
+                
+                # Merge anonymous cart with user cart if exists
+                cart_id = request.session.get('cart_id')
+                if cart_id:
+                    try:
+                        anonymous_cart = Cart.objects.get(id=cart_id)
+                        user_cart, created = Cart.objects.get_or_create(user=user)
+                        
+                        for item in anonymous_cart.items.all():
+                            user_item, created = CartItem.objects.get_or_create(
+                                cart=user_cart,
+                                product=item.product,
+                                defaults={'quantity': item.quantity}
+                            )
+                            if not created:
+                                user_item.quantity += item.quantity
+                                user_item.save()
+                        
+                        anonymous_cart.delete()
+                        del request.session['cart_id']
+                    except Cart.DoesNotExist:
+                        pass
+                
+                next_url = request.GET.get('next', 'store:home')
+                return redirect(next_url)
+            else:
+                messages.error(request, 'Invalid username or password.')
+    else:
+        form = UserLoginForm()
+    
+    context = {
+        'form': form,
+        'page_title': 'Login | PC Nexus Bangladesh',
+    }
+    
+    return render(request, 'store/login.html', context)
