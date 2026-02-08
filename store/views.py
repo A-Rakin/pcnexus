@@ -3,6 +3,10 @@ from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q
+import json
+from django.shortcuts import render, get_object_or_404
+from django.core.serializers.json import DjangoJSONEncoder
+from .models import Category, Product
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
@@ -962,3 +966,23 @@ def pc_builder(request):
         'title': 'PC Builder Tool',
     }
     return render(request, 'store/pc_builder.html', context)
+
+
+def category_detail(request, slug):
+    category = get_object_or_404(Category, slug=slug)
+    products = Product.objects.filter(category=category, is_active=True)
+    
+    # Convert products to JSON for JavaScript
+    products_json = json.dumps(list(products.values(
+        'id', 'name', 'slug', 'price', 'old_price', 'brand', 
+        'stock', 'rating', 'review_count', 'short_description',
+        'image_url'  # Make sure this field exists or adjust accordingly
+    )), cls=DjangoJSONEncoder)
+    
+    context = {
+        'category': category,
+        'products': products,
+        'products_json': products_json,
+        'title': category.name,
+    }
+    return render(request, 'store/category.html', context)
