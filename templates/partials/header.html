@@ -1,0 +1,50 @@
+{% load static %}
+
+<header>
+    <div class="header-top">
+        <div class="container header-top-content">
+            <div>Free shipping on orders over ৳2000 across Bangladesh</div>
+            <div class="header-top-links">
+                <a href="{% url 'store:support' %}"><i class="fas fa-question-circle"></i> Support</a>
+                <a href="{% url 'store:store_locator' %}"><i class="fas fa-map-marker-alt"></i> Store Locator</a>
+                <a href="tel:+8809611111111"><i class="fas fa-phone-alt"></i> +880 9611-111111</a>
+            </div>
+        </div>
+    </div>
+    
+    <div class="main-header">
+        <div class="container main-header-content">
+            <a href="{% url 'store:home' %}" class="logo">
+                <i class="fas fa-microchip logo-icon"></i>
+                <div class="logo-text">PC<span>Nexus</span></div>
+            </a>
+            
+            <form class="search-container" method="GET" action="{% url 'store:product_search' %}">
+                <input type="text" name="q" placeholder="Search for processors, graphics cards...">
+                <button type="submit"><i class="fas fa-search"></i></button>
+            </form>
+            
+            <div class="header-actions">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'store:account' %}" class="header-action">
+                        <i class="fas fa-user-circle"></i>
+                        <span>Account</span>
+                    </a>
+                {% else %}
+                    <a href="{% url 'store:login' %}" class="header-action">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span>Login</span>
+                    </a>
+                {% endif %}
+                
+                <div class="cart-wrapper">
+                    <a href="{% url 'store:cart' %}" class="header-action">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Cart</span>
+                        <div class="cart-count">0</div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>

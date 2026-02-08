@@ -4,9 +4,11 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Q
 from django.core.paginator import Paginator
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
 from .models import (
     Product, Category, Cart, CartItem, Order, OrderItem, 
-    Wishlist, BangladeshLocation
+    Wishlist, BangladeshLocation, ProductReview
 )
 from .forms import (
     UserRegistrationForm, UserLoginForm, CheckoutForm,
@@ -32,15 +34,11 @@ def home(request):
     
     categories = Category.objects.all()[:6]
     
-    # Bangladesh specific context
-    bd_locations = BangladeshLocation.objects.all()[:10]
-    
     context = {
         'featured_products': featured_products,
         'best_sellers': best_sellers,
         'new_arrivals': new_arrivals,
         'categories': categories,
-        'bd_locations': bd_locations,
         'page_title': 'PC Components & Laptops in Bangladesh | PC Nexus',
     }
     
@@ -96,9 +94,12 @@ def product_list(request):
         'brand', flat=True
     ).distinct()
     
+    categories = Category.objects.all()
+    
     context = {
         'products': page_obj,
         'brands': brands,
+        'categories': categories,
         'page_title': 'PC Components in Bangladesh | PC Nexus',
         'total_products': products.count(),
     }
@@ -129,6 +130,143 @@ def product_detail(request, slug):
     
     return render(request, 'store/product_detail.html', context)
 
+def category_list(request):
+    """List all categories"""
+    categories = Category.objects.all()
+    context = {
+        'categories': categories,
+        'page_title': 'Product Categories | PC Nexus Bangladesh',
+    }
+    return render(request, 'store/category_list.html', context)
+
+def category_detail(request, slug):
+    """Show products in a specific category"""
+    category = get_object_or_404(Category, slug=slug)
+    products = Product.objects.filter(category=category, is_available=True)
+    
+    # Pagination
+    paginator = Paginator(products, 12)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    
+    context = {
+        'category': category,
+        'products': page_obj,
+        'page_title': f'{category.name} in Bangladesh | PC Nexus',
+    }
+    return render(request, 'store/category_detail.html', context)
+
+@require_POST
+def add_to_cart(request, product_id):
+    """Add product to cart"""
+    product = get_object_or_404(Product, id=product_id, is_available=True)
+    
+    if product.stock_quantity == 0:
+        messages.error(request, 'This product is out of stock.')
+        return redirect('store:product_detail', slug=product.slug)
+    
+    if request.user.is_authenticated:
+        cart, created = Cart.objects.get_or_create(user=request.user)
+    else:
+        cart_id = request.session.get('cart_id')
+        if cart_id:
+            cart, created = Cart.objects.get_or_create(id=cart_id)
+        else:
+            cart = Cart.objects.create()
+            request.session['cart_id'] = cart.id
+    
+    quantity = int(request.POST.get('quantity', 1))
+    
+    # Check if item already in cart
+    cart_item, created = CartItem.objects.get_or_create(
+        cart=cart,
+        product=product,
+        defaults={'quantity': quantity}
+    )
+    
+    if not created:
+        cart_item.quantity += quantity
+        cart_item.save()
+    
+    messages.success(request, f'{product.name} added to cart.')
+    
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({
+            'success': True,
+            'cart_items_count': cart.total_items,
+            'message': f'{product.name} added to cart.'
+        })
+    
+    return redirect('store:cart')
+
+@require_POST
+def remove_from_cart(request, item_id):
+    """Remove item from cart"""
+    cart_item = get_object_or_404(CartItem, id=item_id)
+    
+    if request.user.is_authenticated:
+        if cart_item.cart.user != request.user:
+            messages.error(request, 'You do not have permission to modify this cart.')
+            return redirect('store:cart')
+    else:
+        cart_id = request.session.get('cart_id')
+        if not cart_id or cart_item.cart.id != int(cart_id):
+            messages.error(request, 'You do not have permission to modify this cart.')
+            return redirect('store:cart')
+    
+    product_name = cart_item.product.name
+    cart_item.delete()
+    
+    messages.success(request, f'{product_name} removed from cart.')
+    
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({
+            'success': True,
+            'cart_items_count': cart_item.cart.total_items,
+            'message': f'{product_name} removed from cart.'
+        })
+    
+    return redirect('store:cart')
+
+@require_POST
+def update_cart(request, item_id):
+    """Update cart item quantity"""
+    cart_item = get_object_or_404(CartItem, id=item_id)
+    
+    if request.user.is_authenticated:
+        if cart_item.cart.user != request.user:
+            return JsonResponse({'success': False, 'error': 'Permission denied'})
+    else:
+        cart_id = request.session.get('cart_id')
+        if not cart_id or cart_item.cart.id != int(cart_id):
+            return JsonResponse({'success': False, 'error': 'Permission denied'})
+    
+    quantity = int(request.POST.get('quantity', 1))
+    
+    if quantity > cart_item.product.stock_quantity:
+        return JsonResponse({
+            'success': False,
+            'error': f'Only {cart_item.product.stock_quantity} items available.'
+        })
+    
+    if quantity <= 0:
+        cart_item.delete()
+    else:
+        cart_item.quantity = quantity
+        cart_item.save()
+    
+    cart = cart_item.cart
+    
+    return JsonResponse({
+        'success': True,
+        'item_total': cart_item.total_price,
+        'subtotal': cart.total_price,
+        'cart_items_count': cart.total_items,
+        'shipping': 120,
+        'vat': (cart.total_price + 120) * 0.15,
+        'total': cart.total_price + 120 + ((cart.total_price + 120) * 0.15)
+    })
+
 def cart_view(request):
     """Cart view with Bangladesh shipping calculations"""
     if request.user.is_authenticated:
@@ -145,23 +283,21 @@ def cart_view(request):
             cart = Cart.objects.create()
             request.session['cart_id'] = cart.id
     
+    # Calculate totals with VAT for Bangladesh
+    subtotal = cart.total_price
+    shipping_cost = 120  # Default shipping in BDT
+    vat = (subtotal + shipping_cost) * 0.15  # 15% VAT
+    total = subtotal + shipping_cost + vat
+    
     context = {
         'cart': cart,
-        'shipping_cost': 120,  # Default shipping in BDT
-        'vat_percentage': 15,  # VAT in Bangladesh
-    }
-    
-    # Calculate totals with VAT
-    subtotal = cart.total_price
-    shipping = context['shipping_cost']
-    vat = (subtotal + shipping) * 0.15
-    total = subtotal + shipping + vat
-    
-    context.update({
         'subtotal': subtotal,
+        'shipping_cost': shipping_cost,
         'vat': vat,
         'total': total,
-    })
+        'vat_percentage': 15,
+        'page_title': 'Shopping Cart | PC Nexus Bangladesh',
+    }
     
     return render(request, 'store/cart.html', context)
 
@@ -251,6 +387,7 @@ def checkout(request):
             initial_data = {
                 'customer_name': request.user.get_full_name() or request.user.username,
                 'customer_email': request.user.email,
+                'customer_phone': '',
             }
             form = CheckoutForm(initial=initial_data)
         else:
@@ -258,14 +395,36 @@ def checkout(request):
         
         shipping_form = BangladeshShippingForm()
     
+    # Calculate totals for display
+    subtotal = cart.total_price
+    shipping_cost = 120
+    vat = (subtotal + shipping_cost) * 0.15
+    total = subtotal + shipping_cost + vat
+    
     context = {
         'form': form,
         'shipping_form': shipping_form,
         'cart': cart,
+        'subtotal': subtotal,
+        'shipping_cost': shipping_cost,
+        'vat': vat,
+        'total': total,
         'bd_divisions': BangladeshLocation.DIVISIONS,
+        'page_title': 'Checkout | PC Nexus Bangladesh',
     }
     
     return render(request, 'store/checkout.html', context)
+
+def checkout_success(request, order_number):
+    """Order success page"""
+    order = get_object_or_404(Order, order_number=order_number)
+    
+    context = {
+        'order': order,
+        'page_title': 'Order Confirmed | PC Nexus Bangladesh',
+    }
+    
+    return render(request, 'store/checkout_success.html', context)
 
 def product_search(request):
     """Search products for Bangladesh market"""
@@ -296,7 +455,226 @@ def product_search(request):
     
     return render(request, 'store/product_search.html', context)
 
-# Bangladesh specific views
+# Authentication Views
+def user_login(request):
+    """User login view"""
+    if request.user.is_authenticated:
+        return redirect('store:home')
+    
+    if request.method == 'POST':
+        form = UserLoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(request, username=username, password=password)
+            
+            if user is not None:
+                login(request, user)
+                messages.success(request, 'Login successful!')
+                
+                # Merge anonymous cart with user cart if exists
+                cart_id = request.session.get('cart_id')
+                if cart_id:
+                    try:
+                        anonymous_cart = Cart.objects.get(id=cart_id)
+                        user_cart, created = Cart.objects.get_or_create(user=user)
+                        
+                        for item in anonymous_cart.items.all():
+                            user_item, created = CartItem.objects.get_or_create(
+                                cart=user_cart,
+                                product=item.product,
+                                defaults={'quantity': item.quantity}
+                            )
+                            if not created:
+                                user_item.quantity += item.quantity
+                                user_item.save()
+                        
+                        anonymous_cart.delete()
+                        del request.session['cart_id']
+                    except Cart.DoesNotExist:
+                        pass
+                
+                next_url = request.GET.get('next', 'store:home')
+                return redirect(next_url)
+            else:
+                messages.error(request, 'Invalid username or password.')
+    else:
+        form = UserLoginForm()
+    
+    context = {
+        'form': form,
+        'page_title': 'Login | PC Nexus Bangladesh',
+    }
+    
+    return render(request, 'store/login.html', context)
+
+def user_register(request):
+    """User registration view"""
+    if request.user.is_authenticated:
+        return redirect('store:home')
+    
+    if request.method == 'POST':
+        form = UserRegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            messages.success(request, 'Registration successful! Welcome to PC Nexus.')
+            
+            # Create wishlist for new user
+            Wishlist.objects.create(user=user)
+            
+            return redirect('store:home')
+    else:
+        form = UserRegistrationForm()
+    
+    context = {
+        'form': form,
+        'page_title': 'Register | PC Nexus Bangladesh',
+    }
+    
+    return render(request, 'store/register.html', context)
+
+def user_logout(request):
+    """User logout view"""
+    logout(request)
+    messages.success(request, 'You have been logged out.')
+    return redirect('store:home')
+
+# Account Views
+@login_required
+def account(request):
+    """User account dashboard"""
+    orders = Order.objects.filter(user=request.user).order_by('-created_at')[:5]
+    wishlist, created = Wishlist.objects.get_or_create(user=request.user)
+    
+    context = {
+        'user': request.user,
+        'orders': orders,
+        'wishlist': wishlist,
+        'page_title': 'My Account | PC Nexus Bangladesh',
+    }
+    
+    return render(request, 'store/account.html', context)
+
+@login_required
+def order_history(request):
+    """User order history"""
+    orders = Order.objects.filter(user=request.user).order_by('-created_at')
+    
+    context = {
+        'orders': orders,
+        'page_title': 'Order History | PC Nexus Bangladesh',
+    }
+    
+    return render(request, 'store/order_history.html', context)
+
+@login_required
+def order_detail(request, order_number):
+    """Order detail view"""
+    order = get_object_or_404(Order, order_number=order_number, user=request.user)
+    
+    context = {
+        'order': order,
+        'page_title': f'Order #{order.order_number} | PC Nexus Bangladesh',
+    }
+    
+    return render(request, 'store/order_detail.html', context)
+
+# Wishlist Views
+@login_required
+def wishlist_view(request):
+    """User wishlist"""
+    wishlist, created = Wishlist.objects.get_or_create(user=request.user)
+    
+    context = {
+        'wishlist': wishlist,
+        'page_title': 'My Wishlist | PC Nexus Bangladesh',
+    }
+    
+    return render(request, 'store/wishlist.html', context)
+
+@login_required
+@require_POST
+def add_to_wishlist(request, product_id):
+    """Add product to wishlist"""
+    product = get_object_or_404(Product, id=product_id)
+    wishlist, created = Wishlist.objects.get_or_create(user=request.user)
+    
+    if wishlist.products.filter(id=product.id).exists():
+        messages.info(request, 'This product is already in your wishlist.')
+    else:
+        wishlist.products.add(product)
+        messages.success(request, f'{product.name} added to wishlist.')
+    
+    return redirect('store:product_detail', slug=product.slug)
+
+@login_required
+@require_POST
+def remove_from_wishlist(request, product_id):
+    """Remove product from wishlist"""
+    product = get_object_or_404(Product, id=product_id)
+    wishlist = get_object_or_404(Wishlist, user=request.user)
+    
+    if wishlist.products.filter(id=product.id).exists():
+        wishlist.products.remove(product)
+        messages.success(request, f'{product.name} removed from wishlist.')
+    
+    return redirect('store:wishlist')
+
+# Special Pages for Bangladesh
+def pc_builder(request):
+    """PC Builder tool page"""
+    context = {
+        'page_title': 'PC Builder Tool | PC Nexus Bangladesh',
+    }
+    return render(request, 'store/pc_builder.html', context)
+
+def deals(request):
+    """Deals and offers page"""
+    discounted_products = Product.objects.filter(
+        discount_percentage__gt=0,
+        is_available=True
+    )
+    
+    context = {
+        'discounted_products': discounted_products,
+        'page_title': 'Deals & Offers | PC Nexus Bangladesh',
+    }
+    return render(request, 'store/deals.html', context)
+
+def laptops(request):
+    """Laptops page"""
+    laptop_category, created = Category.objects.get_or_create(
+        name='Laptops',
+        defaults={'slug': 'laptops', 'icon': 'fas fa-laptop', 'description': 'Laptops and notebooks'}
+    )
+    
+    laptops = Product.objects.filter(category=laptop_category, is_available=True)
+    
+    context = {
+        'laptops': laptops,
+        'category': laptop_category,
+        'page_title': 'Laptops in Bangladesh | PC Nexus',
+    }
+    return render(request, 'store/laptops.html', context)
+
+def peripherals(request):
+    """Peripherals page"""
+    peripherals_category, created = Category.objects.get_or_create(
+        name='Peripherals',
+        defaults={'slug': 'peripherals', 'icon': 'fas fa-keyboard', 'description': 'Keyboards, mice, monitors, and other peripherals'}
+    )
+    
+    peripherals = Product.objects.filter(category=peripherals_category, is_available=True)
+    
+    context = {
+        'peripherals': peripherals,
+        'category': peripherals_category,
+        'page_title': 'PC Peripherals in Bangladesh | PC Nexus',
+    }
+    return render(request, 'store/peripherals.html', context)
+
+# Support Pages for Bangladesh
 def shipping_info(request):
     """Shipping information for Bangladesh"""
     locations = BangladeshLocation.objects.all()
@@ -396,3 +774,20 @@ def store_locator(request):
     }
     
     return render(request, 'store/store_locator.html', context)
+
+def support(request):
+    """Support page"""
+    context = {
+        'page_title': 'Support Center | PC Nexus Bangladesh',
+    }
+    return render(request, 'store/support.html', context)
+
+def newsletter_subscribe(request):
+    """Handle newsletter subscription"""
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        # Here you would typically save to database
+        # For now, just show success message
+        messages.success(request, 'Thank you for subscribing to our newsletter!')
+    
+    return redirect('store:home')

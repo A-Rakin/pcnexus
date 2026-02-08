@@ -1,0 +1,28 @@
+<div class="nav-container">
+    <div class="container">
+        <nav class="main-nav">
+            <ul class="nav-links">
+                <li><a href="{% url 'store:home' %}" class="{% if request.path == '/' %}active{% endif %}"><i class="fas fa-home"></i> Home</a></li>
+                <li>
+                    <a href="{% url 'store:category_list' %}"><i class="fas fa-desktop"></i> Components <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-content">
+                        <a href="#">Processors (CPU)</a>
+                        <a href="#">Graphics Cards (GPU)</a>
+                        <a href="#">Motherboards</a>
+                        <a href="#">Memory (RAM)</a>
+                        <a href="#">Storage (SSD/HDD)</a>
+                    </div>
+                </li>
+                <li><a href="{% url 'store:laptops' %}"><i class="fas fa-laptop"></i> Laptops</a></li>
+                <li><a href="{% url 'store:peripherals' %}"><i class="fas fa-keyboard"></i> Peripherals</a></li>
+                <li><a href="{% url 'store:pc_builder' %}"><i class="fas fa-tools"></i> PC Builder</a></li>
+                <li><a href="{% url 'store:deals' %}"><i class="fas fa-tag"></i> Deals</a></li>
+            </ul>
+            
+            <div class="nav-promo">
+                <i class="fas fa-bolt"></i>
+                <span>বাংলাদেশে চালু! ঢাকাতে Same Day Delivery Available</span>
+            </div>
+        </nav>
+    </div>
+</div>

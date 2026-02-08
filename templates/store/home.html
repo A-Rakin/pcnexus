@@ -1,0 +1,220 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}PC Nexus - Premium PC Components in Bangladesh{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="container hero-content">
+        <div class="hero-text">
+            <h1>Build Your Dream <span>PC</span> with Confidence</h1>
+            <p>PC Nexus offers the widest selection of PC components, expert advice, and compatibility checking tools to help you build the perfect system for gaming, creativity, or productivity.</p>
+            <div class="hero-buttons">
+                <a href="{% url 'store:pc_builder' %}" class="btn">Start PC Builder</a>
+                <a href="{% url 'store:product_list' %}" class="btn btn-outline">Shop Components</a>
+            </div>
+        </div>
+        <div class="hero-image">
+            <div style="background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); height: 350px; display: flex; align-items: center; justify-content: center; color: white;">
+                <div style="text-align: center; padding: 2rem;">
+                    <i class="fas fa-desktop" style="font-size: 8rem; margin-bottom: 1rem;"></i>
+                    <h2 style="color: white;">Custom Gaming PC</h2>
+                    <p>Fully customizable high-performance systems</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Categories Section -->
+<section class="section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Shop by Category</h2>
+            <a href="{% url 'store:category_list' %}" class="view-all">View All Categories <i class="fas fa-arrow-right"></i></a>
+        </div>
+        
+        <div class="categories-grid">
+            <a href="#" class="category-card">
+                <div class="category-image">
+                    <i class="fas fa-microchip"></i>
+                </div>
+                <div class="category-info">
+                    <h3>Processors</h3>
+                    <p>Intel & AMD CPUs for all performance needs</p>
+                </div>
+            </a>
+            
+            <a href="#" class="category-card">
+                <div class="category-image">
+                    <i class="fas fa-gamepad"></i>
+                </div>
+                <div class="category-info">
+                    <h3>Graphics Cards</h3>
+                    <p>Latest NVIDIA & AMD GPUs for gaming and AI</p>
+                </div>
+            </a>
+            
+            <a href="#" class="category-card">
+                <div class="category-image">
+                    <i class="fas fa-server"></i>
+                </div>
+                <div class="category-info">
+                    <h3>Motherboards</h3>
+                    <p>ATX, Micro-ATX, Mini-ITX for all platforms</p>
+                </div>
+            </a>
+            
+            <a href="#" class="category-card">
+                <div class="category-image">
+                    <i class="fas fa-memory"></i>
+                </div>
+                <div class="category-info">
+                    <h3>Memory & Storage</h3>
+                    <p>High-speed RAM, SSDs, and HDDs</p>
+                </div>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Products -->
+<section class="section" style="background-color: var(--light-gray);">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Featured Products</h2>
+            <a href="{% url 'store:product_list' %}" class="view-all">View All Products <i class="fas fa-arrow-right"></i></a>
+        </div>
+        
+        <div class="products-grid">
+            <div class="product-card">
+                <div class="product-badge">BEST SELLER</div>
+                <div class="product-image">
+                    <div style="background-color: #0d1b2a; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: white;">
+                        <i class="fas fa-microchip" style="font-size: 4rem;"></i>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <span class="product-category">Processors</span>
+                    <h3 class="product-title">AMD Ryzen 7 7800X3D 8-Core, 16-Thread Desktop Processor</h3>
+                    <div class="product-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                        <span>(124 reviews)</span>
+                    </div>
+                    <div class="product-price">
+                        <span class="current-price">৳44,999</span>
+                        <span class="original-price">৳49,999</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="add-to-cart">Add to Cart</button>
+                        <button class="add-to-wishlist"><i class="far fa-heart"></i></button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="product-card">
+                <div class="product-badge">NEW</div>
+                <div class="product-image">
+                    <div style="background-color: #1b4332; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: white;">
+                        <i class="fas fa-gamepad" style="font-size: 4rem;"></i>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <span class="product-category">Graphics Cards</span>
+                    <h3 class="product-title">NVIDIA GeForce RTX 4070 Ti SUPER 16GB GDDR6X Graphics Card</h3>
+                    <div class="product-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="far fa-star"></i>
+                        <span>(87 reviews)</span>
+                    </div>
+                    <div class="product-price">
+                        <span class="current-price">৳89,999</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="add-to-cart">Add to Cart</button>
+                        <button class="add-to-wishlist"><i class="far fa-heart"></i></button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="product-card">
+                <div class="product-image">
+                    <div style="background-color: #3c096c; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: white;">
+                        <i class="fas fa-server" style="font-size: 4rem;"></i>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <span class="product-category">Motherboards</span>
+                    <h3 class="product-title">ASUS ROG Strix Z790-E Gaming WiFi 6E LGA 1700 ATX Motherboard</h3>
+                    <div class="product-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <span>(203 reviews)</span>
+                    </div>
+                    <div class="product-price">
+                        <span class="current-price">৳42,999</span>
+                        <span class="original-price">৳46,999</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="add-to-cart">Add to Cart</button>
+                        <button class="add-to-wishlist"><i class="far fa-heart"></i></button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="product-card">
+                <div class="product-badge">DEAL</div>
+                <div class="product-image">
+                    <div style="background-color: #6a040f; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: white;">
+                        <i class="fas fa-memory" style="font-size: 4rem;"></i>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <span class="product-category">Memory</span>
+                    <h3 class="product-title">Corsair Vengeance RGB 32GB (2x16GB) DDR5 6000MHz CL30 Memory Kit</h3>
+                    <div class="product-rating">
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star"></i>
+                        <i class="fas fa-star-half-alt"></i>
+                        <span>(156 reviews)</span>
+                    </div>
+                    <div class="product-price">
+                        <span class="current-price">৳13,999</span>
+                        <span class="original-price">৳16,999</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="add-to-cart">Add to Cart</button>
+                        <button class="add-to-wishlist"><i class="far fa-heart"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Newsletter -->
+<section class="newsletter">
+    <div class="container">
+        <h2>Stay Updated on PC Tech</h2>
+        <p>Subscribe to our newsletter for the latest component releases, exclusive deals, and expert building tips.</p>
+        <form class="newsletter-form">
+            <input type="email" placeholder="Enter your email address" required>
+            <button type="submit" class="btn btn-secondary">Subscribe</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

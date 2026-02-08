@@ -36,10 +36,15 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'pcnexus.urls'
 
+# Templates Configuration
+# Templates Configuration
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [
+            os.path.join(BASE_DIR, 'pcnexus', 'templates'),  # Add this line
+            os.path.join(BASE_DIR, 'templates'),  # Keep this too
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -47,11 +52,12 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'store.context_processors.store_context',  # Custom context processor
+                'store.context_processors.store_context',
             ],
         },
     },
 ]
+
 
 WSGI_APPLICATION = 'pcnexus.wsgi.application'
 
@@ -100,7 +106,9 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),  # This is important
+]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Media files (Uploaded images)
