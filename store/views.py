@@ -904,3 +904,54 @@ def product_search(request):
     }
     
     return render(request, 'store/product_search.html', context)
+
+def laptops(request):
+    """Laptops page"""
+    # Get or create laptops category
+    laptop_category, created = Category.objects.get_or_create(
+        name='Laptops',
+        defaults={
+            'slug': 'laptops', 
+            'icon': 'fas fa-laptop', 
+            'description': 'Laptops and notebooks for gaming, work, and study'
+        }
+    )
+    
+    # Get laptops
+    laptops = Product.objects.filter(category=laptop_category, is_available=True)
+    
+    # Apply filters
+    brand = request.GET.get('brand')
+    if brand:
+        laptops = laptops.filter(brand__iexact=brand)
+    
+    min_price = request.GET.get('min_price')
+    max_price = request.GET.get('max_price')
+    if min_price:
+        laptops = laptops.filter(price_bdt__gte=min_price)
+    if max_price:
+        laptops = laptops.filter(price_bdt__lte=max_price)
+    
+    stock_status = request.GET.get('stock')
+    if stock_status == 'in_stock':
+        laptops = laptops.filter(stock_quantity__gt=0)
+    elif stock_status == 'low_stock':
+        laptops = laptops.filter(stock_quantity__gt=0, stock_quantity__lt=10)
+    
+    # Sorting
+    sort_by = request.GET.get('sort', '-created_at')
+    if sort_by in ['price_low', 'price_high', '-average_rating', '-created_at']:
+        if sort_by == 'price_low':
+            laptops = laptops.order_by('price_bdt')
+        elif sort_by == 'price_high':
+            laptops = laptops.order_by('-price_bdt')
+        else:
+            laptops = laptops.order_by(sort_by)
+    
+    context = {
+        'laptops': laptops,
+        'category': laptop_category,
+        'page_title': 'Laptops in Bangladesh | PC Nexus',
+    }
+    
+    return render(request, 'store/laptops.html', context)
