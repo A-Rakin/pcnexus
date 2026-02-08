@@ -11,18 +11,26 @@
         <h1>PC Peripherals & Accessories</h1>
         <p>Enhance your PC experience with premium peripherals from top brands</p>
     </div>
-    
+
     <!-- Peripherals Banner -->
-    <div class="category-banner" style="background: linear-gradient(135deg, #0d1b2a 0%, #1b4332 100%); color: white; padding: 3rem; border-radius: var(--border-radius); margin: 2rem 0;">
+    <div class="category-banner"
+        style="background: linear-gradient(135deg, #0d1b2a 0%, #1b4332 100%); color: white; padding: 3rem; border-radius: var(--border-radius); margin: 2rem 0;">
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center;">
             <div>
                 <h2 style="color: white; margin-bottom: 1rem;">Premium Peripherals</h2>
-                <p style="font-size: 1.1rem; opacity: 0.9;">Keyboards, mice, monitors, headsets, and more for gaming and productivity.</p>
+                <p style="font-size: 1.1rem; opacity: 0.9;">Keyboards, mice, monitors, headsets, and more for gaming and
+                    productivity.</p>
                 <div style="display: flex; gap: 1rem; margin-top: 2rem; flex-wrap: wrap;">
-                    <span class="badge" style="background: var(--primary); padding: 0.5rem 1rem; border-radius: 4px;">Gaming Grade</span>
-                    <span class="badge" style="background: var(--secondary); padding: 0.5rem 1rem; border-radius: 4px;">Mechanical Keyboards</span>
-                    <span class="badge" style="background: #6f42c1; padding: 0.5rem 1rem; border-radius: 4px;">RGB Lighting</span>
-                    <span class="badge" style="background: #28a745; padding: 0.5rem 1rem; border-radius: 4px;">Wireless Options</span>
+                    <span class="badge"
+                        style="background: var(--primary); padding: 0.5rem 1rem; border-radius: 4px;">Gaming
+                        Grade</span>
+                    <span class="badge"
+                        style="background: var(--secondary); padding: 0.5rem 1rem; border-radius: 4px;">Mechanical
+                        Keyboards</span>
+                    <span class="badge" style="background: #6f42c1; padding: 0.5rem 1rem; border-radius: 4px;">RGB
+                        Lighting</span>
+                    <span class="badge" style="background: #28a745; padding: 0.5rem 1rem; border-radius: 4px;">Wireless
+                        Options</span>
                 </div>
             </div>
             <div style="text-align: center;">
@@ -30,7 +38,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Peripheral Categories -->
     <div class="peripheral-categories" style="margin: 3rem 0;">
         <h3 style="text-align: center; margin-bottom: 2rem;">Browse by Category</h3>
@@ -44,7 +52,7 @@
                     <p>Mechanical, membrane, gaming, and wireless keyboards</p>
                 </div>
             </a>
-            
+
             <a href="#mice" class="category-card" style="text-decoration: none;">
                 <div class="category-image" style="background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);">
                     <i class="fas fa-mouse"></i>
@@ -54,7 +62,7 @@
                     <p>Gaming mice, wireless mice, and productivity mice</p>
                 </div>
             </a>
-            
+
             <a href="#monitors" class="category-card" style="text-decoration: none;">
                 <div class="category-image" style="background: linear-gradient(135deg, #ff6b00 0%, #e05a00 100%);">
                     <i class="fas fa-desktop"></i>
@@ -64,7 +72,7 @@
                     <p>Gaming monitors, 4K displays, and curved screens</p>
                 </div>
             </a>
-            
+
             <a href="#headsets" class="category-card" style="text-decoration: none;">
                 <div class="category-image" style="background: linear-gradient(135deg, #6f42c1 0%, #5a32a3 100%);">
                     <i class="fas fa-headset"></i>
@@ -74,7 +82,7 @@
                     <p>Gaming headsets, wireless headphones, and studio headsets</p>
                 </div>
             </a>
-            
+
             <a href="#speakers" class="category-card" style="text-decoration: none;">
                 <div class="category-image" style="background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);">
                     <i class="fas fa-volume-up"></i>
@@ -84,7 +92,7 @@
                     <p>PC speakers, soundbars, and audio systems</p>
                 </div>
             </a>
-            
+
             <a href="#accessories" class="category-card" style="text-decoration: none;">
                 <div class="category-image" style="background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);">
                     <i class="fas fa-gamepad"></i>
@@ -96,14 +104,15 @@
             </a>
         </div>
     </div>
-    
+
     <!-- Products Grid -->
     <div class="products-section">
         <div class="section-header">
             <h2 class="section-title">Featured Peripherals</h2>
-            <a href="{% url 'store:product_list' %}?category=peripherals" class="view-all">View All Peripherals <i class="fas fa-arrow-right"></i></a>
+            <a href="{% url 'store:product_list' %}?category=peripherals" class="view-all">View All Peripherals <i
+                    class="fas fa-arrow-right"></i></a>
         </div>
-        
+
         <div class="products-grid">
             {% for product in peripherals %}
             <div class="product-card">
@@ -114,27 +123,29 @@
                 {% elif product.discount_percentage > 0 %}
                 <div class="product-badge">SAVE {{ product.discount_percentage }}%</div>
                 {% endif %}
-                
+
                 <a href="{% url 'store:product_detail' product.slug %}">
                     <div class="product-image">
                         {% if product.main_image %}
                         <img src="{{ product.main_image.url }}" alt="{{ product.name }}">
                         {% else %}
-                        <div style="background: linear-gradient(135deg, #0d1b2a 0%, #1b4332 100%); width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: white;">
+                        <div
+                            style="background: linear-gradient(135deg, #0d1b2a 0%, #1b4332 100%); width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: white;">
                             <i class="{{ product.category.icon }}" style="font-size: 4rem;"></i>
                         </div>
                         {% endif %}
                     </div>
                 </a>
-                
+
                 <div class="product-info">
                     <span class="product-category">{{ product.category.name }}</span>
                     <h3 class="product-title">
-                        <a href="{% url 'store:product_detail' product.slug %}" style="color: inherit; text-decoration: none;">
+                        <a href="{% url 'store:product_detail' product.slug %}"
+                            style="color: inherit; text-decoration: none;">
                             {{ product.name|truncatechars:70 }}
                         </a>
                     </h3>
-                    
+
                     <div class="specs" style="font-size: 0.85rem; color: var(--gray); margin: 0.5rem 0;">
                         <div><i class="fas fa-tag"></i> {{ product.brand }}</div>
                         {% if product.stock_quantity > 0 %}
@@ -143,29 +154,29 @@
                         <div><i class="fas fa-times-circle" style="color: var(--danger);"></i> Out of Stock</div>
                         {% endif %}
                     </div>
-                    
+
                     <div class="product-rating">
                         {% for i in "12345" %}
-                            {% if forloop.counter <= product.average_rating|add:"0" %}
-                                <i class="fas fa-star"></i>
-                            {% elif forloop.counter <= product.average_rating|add:"0.5" %}
-                                <i class="fas fa-star-half-alt"></i>
-                            {% else %}
+                        {% if forloop.counter <= product.average_rating|add:"0" %} <i class="fas fa-star"></i>
+                            {% elif forloop.counter <= product.average_rating|add:"0.5" %} <i
+                                class="fas fa-star-half-alt"></i>
+                                {% else %}
                                 <i class="far fa-star"></i>
-                            {% endif %}
-                        {% endfor %}
-                        <span>({{ product.review_count }})</span>
+                                {% endif %}
+                                {% endfor %}
+                                <span>({{ product.review_count }})</span>
                     </div>
-                    
+
                     <div class="product-price">
                         <span class="price-bdt">{{ product.current_price|floatformat:0|intcomma }}</span>
                         {% if product.discount_percentage > 0 %}
                         <span class="original-price">৳{{ product.price_bdt|floatformat:0|intcomma }}</span>
                         {% endif %}
                     </div>
-                    
+
                     <div class="product-actions">
-                        <button class="add-to-cart" onclick="addToCart({{ product.id }})" {% if product.stock_quantity == 0 %}disabled{% endif %}>
+                        <button class="add-to-cart" onclick="addToCart({{ product.id }})" {% if
+                            product.stock_quantity==0 %}disabled{% endif %}>
                             {% if product.stock_quantity == 0 %}Out of Stock{% else %}Add to Cart{% endif %}
                         </button>
                         <button class="add-to-wishlist" onclick="addToWishlist({{ product.id }})">
@@ -183,9 +194,10 @@
             {% endfor %}
         </div>
     </div>
-    
+
     <!-- Bangladesh Peripherals Info -->
-    <div class="bangladesh-info" style="background: var(--light-gray); padding: 2rem; border-radius: var(--border-radius); margin-top: 3rem;">
+    <div class="bangladesh-info"
+        style="background: var(--light-gray); padding: 2rem; border-radius: var(--border-radius); margin-top: 3rem;">
         <h3 style="margin-bottom: 1.5rem;">Peripherals in Bangladesh - PC Nexus</h3>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
             <div>
@@ -206,32 +218,39 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Popular Brands -->
     <div class="brands-section" style="margin-top: 4rem;">
         <h3 style="text-align: center; margin-bottom: 2rem;">Popular Brands</h3>
-        <div class="brands-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
-            <div style="background: white; padding: 1.5rem; border-radius: var(--border-radius); text-align: center; box-shadow: var(--box-shadow);">
+        <div class="brands-grid"
+            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 1.5rem; margin-top: 2rem;">
+            <div
+                style="background: white; padding: 1.5rem; border-radius: var(--border-radius); text-align: center; box-shadow: var(--box-shadow);">
                 <div style="font-size: 2rem; color: #0056d6; margin-bottom: 0.5rem;">🟥</div>
                 <strong>Logitech</strong>
             </div>
-            <div style="background: white; padding: 1.5rem; border-radius: var(--border-radius); text-align: center; box-shadow: var(--box-shadow);">
+            <div
+                style="background: white; padding: 1.5rem; border-radius: var(--border-radius); text-align: center; box-shadow: var(--box-shadow);">
                 <div style="font-size: 2rem; color: #000; margin-bottom: 0.5rem;">⚫</div>
                 <strong>Razer</strong>
             </div>
-            <div style="background: white; padding: 1.5rem; border-radius: var(--border-radius); text-align: center; box-shadow: var(--box-shadow);">
+            <div
+                style="background: white; padding: 1.5rem; border-radius: var(--border-radius); text-align: center; box-shadow: var(--box-shadow);">
                 <div style="font-size: 2rem; color: #ff6b00; margin-bottom: 0.5rem;">🟧</div>
                 <strong>Corsair</strong>
             </div>
-            <div style="background: white; padding: 1.5rem; border-radius: var(--border-radius); text-align: center; box-shadow: var(--box-shadow);">
+            <div
+                style="background: white; padding: 1.5rem; border-radius: var(--border-radius); text-align: center; box-shadow: var(--box-shadow);">
                 <div style="font-size: 2rem; color: #000; margin-bottom: 0.5rem;">⚫</div>
                 <strong>SteelSeries</strong>
             </div>
-            <div style="background: white; padding: 1.5rem; border-radius: var(--border-radius); text-align: center; box-shadow: var(--box-shadow);">
+            <div
+                style="background: white; padding: 1.5rem; border-radius: var(--border-radius); text-align: center; box-shadow: var(--box-shadow);">
                 <div style="font-size: 2rem; color: #0066b3; margin-bottom: 0.5rem;">🟦</div>
                 <strong>HyperX</strong>
             </div>
-            <div style="background: white; padding: 1.5rem; border-radius: var(--border-radius); text-align: center; box-shadow: var(--box-shadow);">
+            <div
+                style="background: white; padding: 1.5rem; border-radius: var(--border-radius); text-align: center; box-shadow: var(--box-shadow);">
                 <div style="font-size: 2rem; color: #000; margin-bottom: 0.5rem;">⚫</div>
                 <strong>ASUS ROG</strong>
             </div>
@@ -244,42 +263,42 @@
         margin: 2rem 0 3rem;
         text-align: center;
     }
-    
+
     .page-header h1 {
         font-size: 2.5rem;
         margin-bottom: 0.5rem;
     }
-    
+
     .page-header p {
         color: var(--gray);
         font-size: 1.1rem;
     }
-    
+
     .peripheral-categories {
         margin: 3rem 0;
     }
-    
+
     .peripheral-categories h3 {
         color: var(--dark);
         font-size: 1.8rem;
     }
-    
+
     .products-section {
         margin-top: 3rem;
     }
-    
+
     .section-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 2rem;
     }
-    
+
     .section-title {
         font-size: 1.8rem;
         color: var(--dark);
     }
-    
+
     .view-all {
         color: var(--primary);
         text-decoration: none;
@@ -288,17 +307,17 @@
         align-items: center;
         gap: 0.5rem;
     }
-    
+
     .view-all:hover {
         text-decoration: underline;
     }
-    
+
     .products-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
         gap: 2rem;
     }
-    
+
     .no-products {
         grid-column: 1 / -1;
         text-align: center;
@@ -307,12 +326,12 @@
         border-radius: var(--border-radius);
         box-shadow: var(--box-shadow);
     }
-    
+
     .bangladesh-info h3 {
         color: var(--dark);
         margin-bottom: 1.5rem;
     }
-    
+
     .bangladesh-info h4 {
         color: var(--dark);
         margin-bottom: 0.5rem;
@@ -320,56 +339,56 @@
         align-items: center;
         gap: 0.5rem;
     }
-    
+
     .bangladesh-info p {
         color: var(--gray);
         font-size: 0.95rem;
     }
-    
+
     .brands-section h3 {
         color: var(--dark);
         font-size: 1.8rem;
     }
-    
+
     .badge {
         display: inline-block;
         font-size: 0.85rem;
         font-weight: 600;
     }
-    
+
     .specs div {
         display: flex;
         align-items: center;
         gap: 0.5rem;
         margin: 0.3rem 0;
     }
-    
+
     @media (max-width: 768px) {
         .page-header h1 {
             font-size: 2rem;
         }
-        
-        .category-banner > div {
+
+        .category-banner>div {
             grid-template-columns: 1fr;
             text-align: center;
         }
-        
+
         .section-header {
             flex-direction: column;
             align-items: flex-start;
             gap: 1rem;
         }
     }
-    
+
     @media (max-width: 576px) {
         .products-grid {
             grid-template-columns: 1fr;
         }
-        
+
         .categories-grid {
             grid-template-columns: 1fr;
         }
-        
+
         .brands-grid {
             grid-template-columns: repeat(2, 1fr);
         }
@@ -377,12 +396,12 @@
 </style>
 
 <script>
-function addToCart(productId) {
-    alert('Product added to cart!');
-}
+    function addToCart(productId) {
+        alert('Product added to cart!');
+    }
 
-function addToWishlist(productId) {
-    alert('Product added to wishlist!');
-}
+    function addToWishlist(productId) {
+        alert('Product added to wishlist!');
+    }
 </script>
 {% endblock %}

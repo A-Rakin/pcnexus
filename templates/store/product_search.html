@@ -9,19 +9,20 @@
     <!-- Search Header -->
     <div class="search-header">
         <h1>Search Results</h1>
-        
+
         <div class="search-info">
             {% if query %}
-                <p>Search results for: "<strong>{{ query }}</strong>"</p>
+            <p>Search results for: "<strong>{{ query }}</strong>"</p>
             {% endif %}
             <p class="result-count">{{ total_results }} product(s) found</p>
         </div>
-        
+
         <!-- Search Box -->
         <div class="search-box-container" style="max-width: 600px; margin: 2rem auto;">
             <form method="GET" action="{% url 'store:product_search' %}" class="search-form">
                 <div class="search-input-group">
-                    <input type="text" name="q" value="{{ query }}" placeholder="Search for processors, graphics cards, motherboards..." class="search-input">
+                    <input type="text" name="q" value="{{ query }}"
+                        placeholder="Search for processors, graphics cards, motherboards..." class="search-input">
                     <button type="submit" class="search-button">
                         <i class="fas fa-search"></i> Search
                     </button>
@@ -29,69 +30,79 @@
             </form>
         </div>
     </div>
-    
+
     <!-- Filters and Results -->
     <div class="search-results-layout">
         <!-- Filters Sidebar -->
         <aside class="filters-sidebar">
             <h3>Refine Results</h3>
-            
+
             <form method="GET" action="{% url 'store:product_search' %}">
                 <input type="hidden" name="q" value="{{ query }}">
-                
+
                 <!-- Price Range -->
                 <div class="filter-group">
                     <h4>Price Range (৳)</h4>
                     <div class="price-inputs">
-                        <input type="number" name="min_price" placeholder="Min" value="{{ request.GET.min_price }}" class="form-control">
+                        <input type="number" name="min_price" placeholder="Min" value="{{ request.GET.min_price }}"
+                            class="form-control">
                         <span>to</span>
-                        <input type="number" name="max_price" placeholder="Max" value="{{ request.GET.max_price }}" class="form-control">
+                        <input type="number" name="max_price" placeholder="Max" value="{{ request.GET.max_price }}"
+                            class="form-control">
                     </div>
                 </div>
-                
+
                 <!-- Category -->
                 <div class="filter-group">
                     <h4>Category</h4>
                     <select name="category" class="form-control">
                         <option value="">All Categories</option>
                         {% for category in categories %}
-                        <option value="{{ category.slug }}" {% if request.GET.category == category.slug %}selected{% endif %}>
+                        <option value="{{ category.slug }}" {% if request.GET.category==category.slug %}selected{% endif
+                            %}>
                             {{ category.name }}
                         </option>
                         {% endfor %}
                     </select>
                 </div>
-                
+
                 <!-- Stock Status -->
                 <div class="filter-group">
                     <h4>Stock Status</h4>
                     <select name="stock" class="form-control">
                         <option value="">Any</option>
-                        <option value="in_stock" {% if request.GET.stock == 'in_stock' %}selected{% endif %}>In Stock</option>
-                        <option value="low_stock" {% if request.GET.stock == 'low_stock' %}selected{% endif %}>Low Stock</option>
+                        <option value="in_stock" {% if request.GET.stock=='in_stock' %}selected{% endif %}>In Stock
+                        </option>
+                        <option value="low_stock" {% if request.GET.stock=='low_stock' %}selected{% endif %}>Low Stock
+                        </option>
                     </select>
                 </div>
-                
+
                 <!-- Sort -->
                 <div class="filter-group">
                     <h4>Sort By</h4>
                     <select name="sort" class="form-control">
-                        <option value="-created_at" {% if request.GET.sort == '-created_at' %}selected{% endif %}>Newest</option>
-                        <option value="price_low" {% if request.GET.sort == 'price_low' %}selected{% endif %}>Price: Low to High</option>
-                        <option value="price_high" {% if request.GET.sort == 'price_high' %}selected{% endif %}>Price: High to Low</option>
-                        <option value="-average_rating" {% if request.GET.sort == '-average_rating' %}selected{% endif %}>Highest Rated</option>
+                        <option value="-created_at" {% if request.GET.sort=='-created_at' %}selected{% endif %}>Newest
+                        </option>
+                        <option value="price_low" {% if request.GET.sort=='price_low' %}selected{% endif %}>Price: Low
+                            to High</option>
+                        <option value="price_high" {% if request.GET.sort=='price_high' %}selected{% endif %}>Price:
+                            High to Low</option>
+                        <option value="-average_rating" {% if request.GET.sort=='-average_rating' %}selected{% endif %}>
+                            Highest Rated</option>
                     </select>
                 </div>
-                
+
                 <div class="filter-buttons">
                     <button type="submit" class="btn btn-primary" style="width: 100%;">Apply Filters</button>
-                    <a href="{% url 'store:product_search' %}?q={{ query }}" class="btn btn-outline" style="width: 100%; margin-top: 0.5rem;">
+                    <a href="{% url 'store:product_search' %}?q={{ query }}" class="btn btn-outline"
+                        style="width: 100%; margin-top: 0.5rem;">
                         Clear Filters
                     </a>
                 </div>
             </form>
         </aside>
-        
+
         <!-- Products Grid -->
         <main class="products-results">
             {% if products %}
@@ -105,53 +116,56 @@
                     {% elif product.discount_percentage > 0 %}
                     <div class="product-badge">SAVE {{ product.discount_percentage }}%</div>
                     {% endif %}
-                    
+
                     <a href="{% url 'store:product_detail' product.slug %}">
                         <div class="product-image">
                             {% if product.main_image %}
                             <img src="{{ product.main_image.url }}" alt="{{ product.name }}">
                             {% else %}
-                            <div style="background-color: #0d1b2a; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: white;">
+                            <div
+                                style="background-color: #0d1b2a; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: white;">
                                 <i class="{{ product.category.icon }}" style="font-size: 4rem;"></i>
                             </div>
                             {% endif %}
                         </div>
                     </a>
-                    
+
                     <div class="product-info">
                         <span class="product-category">{{ product.category.name }}</span>
                         <h3 class="product-title">
-                            <a href="{% url 'store:product_detail' product.slug %}" style="color: inherit; text-decoration: none;">
+                            <a href="{% url 'store:product_detail' product.slug %}"
+                                style="color: inherit; text-decoration: none;">
                                 {{ product.name|truncatechars:70 }}
                             </a>
                         </h3>
-                        
+
                         <div class="product-rating">
                             {% for i in "12345" %}
-                                {% if forloop.counter <= product.average_rating|add:"0" %}
-                                    <i class="fas fa-star"></i>
-                                {% elif forloop.counter <= product.average_rating|add:"0.5" %}
-                                    <i class="fas fa-star-half-alt"></i>
-                                {% else %}
+                            {% if forloop.counter <= product.average_rating|add:"0" %} <i class="fas fa-star"></i>
+                                {% elif forloop.counter <= product.average_rating|add:"0.5" %} <i
+                                    class="fas fa-star-half-alt"></i>
+                                    {% else %}
                                     <i class="far fa-star"></i>
-                                {% endif %}
-                            {% endfor %}
-                            <span>({{ product.review_count }})</span>
+                                    {% endif %}
+                                    {% endfor %}
+                                    <span>({{ product.review_count }})</span>
                         </div>
-                        
-                        <div class="stock-status {% if product.stock_quantity == 0 %}stock-out{% elif product.stock_quantity < 10 %}stock-low{% else %}stock-in{% endif %}">
+
+                        <div
+                            class="stock-status {% if product.stock_quantity == 0 %}stock-out{% elif product.stock_quantity < 10 %}stock-low{% else %}stock-in{% endif %}">
                             {{ product.stock_status }}
                         </div>
-                        
+
                         <div class="product-price">
                             <span class="price-bdt">{{ product.current_price|floatformat:0|intcomma }}</span>
                             {% if product.discount_percentage > 0 %}
                             <span class="original-price">৳{{ product.price_bdt|floatformat:0|intcomma }}</span>
                             {% endif %}
                         </div>
-                        
+
                         <div class="product-actions">
-                            <button class="add-to-cart" onclick="addToCart({{ product.id }})" {% if product.stock_quantity == 0 %}disabled{% endif %}>
+                            <button class="add-to-cart" onclick="addToCart({{ product.id }})" {% if
+                                product.stock_quantity==0 %}disabled{% endif %}>
                                 {% if product.stock_quantity == 0 %}Out of Stock{% else %}Add to Cart{% endif %}
                             </button>
                             <button class="add-to-wishlist" onclick="addToWishlist({{ product.id }})">
@@ -162,28 +176,30 @@
                 </div>
                 {% endfor %}
             </div>
-            
+
             <!-- Pagination -->
             {% if products.paginator.num_pages > 1 %}
             <div class="pagination">
                 {% if products.has_previous %}
-                <a href="?q={{ query }}&page={{ products.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' and key != 'q' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="page-link">
+                <a href="?q={{ query }}&page={{ products.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' and key != 'q' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"
+                    class="page-link">
                     <i class="fas fa-chevron-left"></i> Previous
                 </a>
                 {% endif %}
-                
+
                 <span class="current-page">
                     Page {{ products.number }} of {{ products.paginator.num_pages }}
                 </span>
-                
+
                 {% if products.has_next %}
-                <a href="?q={{ query }}&page={{ products.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' and key != 'q' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="page-link">
+                <a href="?q={{ query }}&page={{ products.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' and key != 'q' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"
+                    class="page-link">
                     Next <i class="fas fa-chevron-right"></i>
                 </a>
                 {% endif %}
             </div>
             {% endif %}
-            
+
             {% else %}
             <!-- No Results -->
             <div class="no-results">
@@ -220,37 +236,37 @@
         background: linear-gradient(135deg, #f5f7ff 0%, #eef1ff 100%);
         border-radius: var(--border-radius);
     }
-    
+
     .search-header h1 {
         font-size: 2.5rem;
         margin-bottom: 1rem;
         color: var(--dark);
     }
-    
+
     .search-info {
         margin-bottom: 1rem;
     }
-    
+
     .search-info p {
         font-size: 1.1rem;
         color: var(--gray-dark);
         margin: 0.5rem 0;
     }
-    
+
     .result-count {
         font-weight: 600;
         color: var(--primary);
     }
-    
+
     .search-form {
         margin-top: 1rem;
     }
-    
+
     .search-input-group {
         display: flex;
         gap: 0.5rem;
     }
-    
+
     .search-input {
         flex: 1;
         padding: 1rem 1.5rem;
@@ -259,12 +275,12 @@
         font-size: 1rem;
         transition: var(--transition);
     }
-    
+
     .search-input:focus {
         outline: none;
         border-color: var(--primary);
     }
-    
+
     .search-button {
         padding: 1rem 2rem;
         background: var(--primary);
@@ -278,18 +294,18 @@
         align-items: center;
         gap: 0.5rem;
     }
-    
+
     .search-button:hover {
         background: var(--primary-dark);
     }
-    
+
     .search-results-layout {
         display: grid;
         grid-template-columns: 250px 1fr;
         gap: 2rem;
         margin: 2rem 0;
     }
-    
+
     .filters-sidebar {
         background: white;
         padding: 1.5rem;
@@ -299,47 +315,47 @@
         position: sticky;
         top: 120px;
     }
-    
+
     .filters-sidebar h3 {
         margin-bottom: 1.5rem;
         padding-bottom: 0.5rem;
         border-bottom: 2px solid var(--light-gray);
     }
-    
+
     .filter-group {
         margin-bottom: 1.5rem;
     }
-    
+
     .filter-group h4 {
         font-size: 0.9rem;
         color: var(--gray-dark);
         margin-bottom: 0.5rem;
         font-weight: 600;
     }
-    
+
     .price-inputs {
         display: flex;
         align-items: center;
         gap: 0.5rem;
     }
-    
+
     .price-inputs input {
         flex: 1;
         padding: 0.5rem;
     }
-    
+
     .price-inputs span {
         color: var(--gray);
     }
-    
+
     .filter-buttons {
         margin-top: 1.5rem;
     }
-    
+
     .products-results {
         min-height: 500px;
     }
-    
+
     .no-results {
         text-align: center;
         padding: 4rem 2rem;
@@ -347,22 +363,22 @@
         border-radius: var(--border-radius);
         box-shadow: var(--box-shadow);
     }
-    
+
     .no-results-icon {
         margin-bottom: 2rem;
     }
-    
+
     .no-results h3 {
         color: var(--dark);
         margin-bottom: 1rem;
     }
-    
+
     .no-results p {
         color: var(--gray);
         margin-bottom: 2rem;
         font-size: 1.1rem;
     }
-    
+
     .suggestions {
         text-align: left;
         max-width: 400px;
@@ -371,23 +387,23 @@
         background: var(--light-gray);
         border-radius: var(--border-radius);
     }
-    
+
     .suggestions h4 {
         margin-bottom: 1rem;
         color: var(--dark);
     }
-    
+
     .suggestions ul {
         list-style: none;
         padding-left: 1rem;
     }
-    
+
     .suggestions li {
         padding: 0.5rem 0;
         color: var(--gray-dark);
         position: relative;
     }
-    
+
     .suggestions li:before {
         content: "•";
         color: var(--primary);
@@ -395,14 +411,14 @@
         position: absolute;
         left: -1rem;
     }
-    
+
     .action-buttons {
         display: flex;
         gap: 1rem;
         justify-content: center;
         flex-wrap: wrap;
     }
-    
+
     .pagination {
         display: flex;
         justify-content: center;
@@ -412,7 +428,7 @@
         padding-top: 2rem;
         border-top: 1px solid var(--light-gray);
     }
-    
+
     .page-link {
         padding: 0.5rem 1rem;
         background: var(--primary);
@@ -424,61 +440,61 @@
         align-items: center;
         gap: 0.5rem;
     }
-    
+
     .page-link:hover {
         background: var(--primary-dark);
     }
-    
+
     .current-page {
         color: var(--gray-dark);
         font-weight: 500;
     }
-    
+
     /* Products Grid */
     .products-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
         gap: 2rem;
     }
-    
+
     /* Responsive */
     @media (max-width: 992px) {
         .search-results-layout {
             grid-template-columns: 1fr;
         }
-        
+
         .filters-sidebar {
             position: static;
         }
     }
-    
+
     @media (max-width: 768px) {
         .search-header h1 {
             font-size: 2rem;
         }
-        
+
         .search-input-group {
             flex-direction: column;
         }
-        
+
         .search-button {
             justify-content: center;
         }
-        
+
         .action-buttons {
             flex-direction: column;
         }
-        
+
         .action-buttons .btn {
             width: 100%;
         }
     }
-    
+
     @media (max-width: 576px) {
         .products-grid {
             grid-template-columns: 1fr;
         }
-        
+
         .pagination {
             flex-direction: column;
             gap: 1rem;
@@ -487,16 +503,16 @@
 </style>
 
 <script>
-function addToCart(productId) {
-    // Simple cart add functionality
-    alert('Product added to cart!');
-    // In production, this would make an AJAX call to your Django view
-}
+    function addToCart(productId) {
+        // Simple cart add functionality
+        alert('Product added to cart!');
+        // In production, this would make an AJAX call to your Django view
+    }
 
-function addToWishlist(productId) {
-    // Simple wishlist add functionality
-    alert('Product added to wishlist!');
-    // In production, this would make an AJAX call to your Django view
-}
+    function addToWishlist(productId) {
+        // Simple wishlist add functionality
+        alert('Product added to wishlist!');
+        // In production, this would make an AJAX call to your Django view
+    }
 </script>
 {% endblock %}

@@ -11,17 +11,24 @@
         <h1>Laptops & Notebooks</h1>
         <p>Find the perfect laptop for gaming, work, or study in Bangladesh</p>
     </div>
-    
+
     <!-- Laptops Banner -->
-    <div class="category-banner" style="background: linear-gradient(135deg, #1a1a2e 0%, #2d3047 100%); color: white; padding: 3rem; border-radius: var(--border-radius); margin: 2rem 0;">
+    <div class="category-banner"
+        style="background: linear-gradient(135deg, #1a1a2e 0%, #2d3047 100%); color: white; padding: 3rem; border-radius: var(--border-radius); margin: 2rem 0;">
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center;">
             <div>
                 <h2 style="color: white; margin-bottom: 1rem;">Best Laptops in Bangladesh</h2>
-                <p style="font-size: 1.1rem; opacity: 0.9;">Gaming laptops, ultrabooks, business laptops, and student laptops from top brands with official warranty.</p>
+                <p style="font-size: 1.1rem; opacity: 0.9;">Gaming laptops, ultrabooks, business laptops, and student
+                    laptops from top brands with official warranty.</p>
                 <div style="display: flex; gap: 1rem; margin-top: 2rem;">
-                    <span class="badge" style="background: var(--primary); padding: 0.5rem 1rem; border-radius: 4px;">Official Warranty</span>
-                    <span class="badge" style="background: var(--secondary); padding: 0.5rem 1rem; border-radius: 4px;">Cash on Delivery</span>
-                    <span class="badge" style="background: #28a745; padding: 0.5rem 1rem; border-radius: 4px;">Free Shipping</span>
+                    <span class="badge"
+                        style="background: var(--primary); padding: 0.5rem 1rem; border-radius: 4px;">Official
+                        Warranty</span>
+                    <span class="badge"
+                        style="background: var(--secondary); padding: 0.5rem 1rem; border-radius: 4px;">Cash on
+                        Delivery</span>
+                    <span class="badge" style="background: #28a745; padding: 0.5rem 1rem; border-radius: 4px;">Free
+                        Shipping</span>
                 </div>
             </div>
             <div style="text-align: center;">
@@ -29,111 +36,126 @@
             </div>
         </div>
     </div>
-    
+
     <!-- Filters and Results -->
     <div class="product-layout">
         <!-- Filters Sidebar -->
         <aside class="filters-sidebar">
             <h3>Filter Laptops</h3>
-            
+
             <form method="GET" action="{% url 'store:laptops' %}">
                 <!-- Price Range -->
                 <div class="filter-group">
                     <h4>Price Range (৳)</h4>
                     <div class="price-inputs">
-                        <input type="number" name="min_price" placeholder="Min" value="{{ request.GET.min_price }}" class="form-control">
+                        <input type="number" name="min_price" placeholder="Min" value="{{ request.GET.min_price }}"
+                            class="form-control">
                         <span>to</span>
-                        <input type="number" name="max_price" placeholder="Max" value="{{ request.GET.max_price }}" class="form-control">
+                        <input type="number" name="max_price" placeholder="Max" value="{{ request.GET.max_price }}"
+                            class="form-control">
                     </div>
                 </div>
-                
+
                 <!-- Brand -->
                 <div class="filter-group">
                     <h4>Brand</h4>
                     <select name="brand" class="form-control">
                         <option value="">All Brands</option>
-                        <option value="asus" {% if request.GET.brand == 'asus' %}selected{% endif %}>ASUS</option>
-                        <option value="msi" {% if request.GET.brand == 'msi' %}selected{% endif %}>MSI</option>
-                        <option value="lenovo" {% if request.GET.brand == 'lenovo' %}selected{% endif %}>Lenovo</option>
-                        <option value="dell" {% if request.GET.brand == 'dell' %}selected{% endif %}>Dell</option>
-                        <option value="hp" {% if request.GET.brand == 'hp' %}selected{% endif %}>HP</option>
-                        <option value="acer" {% if request.GET.brand == 'acer' %}selected{% endif %}>Acer</option>
-                        <option value="apple" {% if request.GET.brand == 'apple' %}selected{% endif %}>Apple</option>
+                        <option value="asus" {% if request.GET.brand=='asus' %}selected{% endif %}>ASUS</option>
+                        <option value="msi" {% if request.GET.brand=='msi' %}selected{% endif %}>MSI</option>
+                        <option value="lenovo" {% if request.GET.brand=='lenovo' %}selected{% endif %}>Lenovo</option>
+                        <option value="dell" {% if request.GET.brand=='dell' %}selected{% endif %}>Dell</option>
+                        <option value="hp" {% if request.GET.brand=='hp' %}selected{% endif %}>HP</option>
+                        <option value="acer" {% if request.GET.brand=='acer' %}selected{% endif %}>Acer</option>
+                        <option value="apple" {% if request.GET.brand=='apple' %}selected{% endif %}>Apple</option>
                     </select>
                 </div>
-                
+
                 <!-- Processor -->
                 <div class="filter-group">
                     <h4>Processor</h4>
                     <select name="processor" class="form-control">
                         <option value="">Any Processor</option>
-                        <option value="intel" {% if request.GET.processor == 'intel' %}selected{% endif %}>Intel Core</option>
-                        <option value="amd" {% if request.GET.processor == 'amd' %}selected{% endif %}>AMD Ryzen</option>
-                        <option value="apple" {% if request.GET.processor == 'apple' %}selected{% endif %}>Apple M-series</option>
+                        <option value="intel" {% if request.GET.processor=='intel' %}selected{% endif %}>Intel Core
+                        </option>
+                        <option value="amd" {% if request.GET.processor=='amd' %}selected{% endif %}>AMD Ryzen</option>
+                        <option value="apple" {% if request.GET.processor=='apple' %}selected{% endif %}>Apple M-series
+                        </option>
                     </select>
                 </div>
-                
+
                 <!-- RAM -->
                 <div class="filter-group">
                     <h4>RAM</h4>
                     <select name="ram" class="form-control">
                         <option value="">Any RAM</option>
-                        <option value="8" {% if request.GET.ram == '8' %}selected{% endif %}>8GB</option>
-                        <option value="16" {% if request.GET.ram == '16' %}selected{% endif %}>16GB</option>
-                        <option value="32" {% if request.GET.ram == '32' %}selected{% endif %}>32GB</option>
-                        <option value="64" {% if request.GET.ram == '64' %}selected{% endif %}>64GB+</option>
+                        <option value="8" {% if request.GET.ram=='8' %}selected{% endif %}>8GB</option>
+                        <option value="16" {% if request.GET.ram=='16' %}selected{% endif %}>16GB</option>
+                        <option value="32" {% if request.GET.ram=='32' %}selected{% endif %}>32GB</option>
+                        <option value="64" {% if request.GET.ram=='64' %}selected{% endif %}>64GB+</option>
                     </select>
                 </div>
-                
+
                 <!-- Graphics -->
                 <div class="filter-group">
                     <h4>Graphics</h4>
                     <select name="graphics" class="form-control">
                         <option value="">Any Graphics</option>
-                        <option value="integrated" {% if request.GET.graphics == 'integrated' %}selected{% endif %}>Integrated</option>
-                        <option value="nvidia" {% if request.GET.graphics == 'nvidia' %}selected{% endif %}>NVIDIA</option>
-                        <option value="amd_gpu" {% if request.GET.graphics == 'amd_gpu' %}selected{% endif %}>AMD Radeon</option>
+                        <option value="integrated" {% if request.GET.graphics=='integrated' %}selected{% endif %}>
+                            Integrated</option>
+                        <option value="nvidia" {% if request.GET.graphics=='nvidia' %}selected{% endif %}>NVIDIA
+                        </option>
+                        <option value="amd_gpu" {% if request.GET.graphics=='amd_gpu' %}selected{% endif %}>AMD Radeon
+                        </option>
                     </select>
                 </div>
-                
+
                 <!-- Storage -->
                 <div class="filter-group">
                     <h4>Storage</h4>
                     <select name="storage" class="form-control">
                         <option value="">Any Storage</option>
-                        <option value="256" {% if request.GET.storage == '256' %}selected{% endif %}>256GB SSD</option>
-                        <option value="512" {% if request.GET.storage == '512' %}selected{% endif %}>512GB SSD</option>
-                        <option value="1tb" {% if request.GET.storage == '1tb' %}selected{% endif %}>1TB SSD</option>
-                        <option value="2tb" {% if request.GET.storage == '2tb' %}selected{% endif %}>2TB+ SSD</option>
+                        <option value="256" {% if request.GET.storage=='256' %}selected{% endif %}>256GB SSD</option>
+                        <option value="512" {% if request.GET.storage=='512' %}selected{% endif %}>512GB SSD</option>
+                        <option value="1tb" {% if request.GET.storage=='1tb' %}selected{% endif %}>1TB SSD</option>
+                        <option value="2tb" {% if request.GET.storage=='2tb' %}selected{% endif %}>2TB+ SSD</option>
                     </select>
                 </div>
-                
+
                 <!-- Stock Status -->
                 <div class="filter-group">
                     <h4>Stock Status</h4>
                     <select name="stock" class="form-control">
                         <option value="">Any</option>
-                        <option value="in_stock" {% if request.GET.stock == 'in_stock' %}selected{% endif %}>In Stock</option>
-                        <option value="low_stock" {% if request.GET.stock == 'low_stock' %}selected{% endif %}>Low Stock</option>
+                        <option value="in_stock" {% if request.GET.stock=='in_stock' %}selected{% endif %}>In Stock
+                        </option>
+                        <option value="low_stock" {% if request.GET.stock=='low_stock' %}selected{% endif %}>Low Stock
+                        </option>
                     </select>
                 </div>
-                
+
                 <!-- Sort -->
                 <div class="filter-group">
                     <h4>Sort By</h4>
                     <select name="sort" class="form-control">
-                        <option value="-created_at" {% if request.GET.sort == '-created_at' %}selected{% endif %}>Newest</option>
-                        <option value="price_low" {% if request.GET.sort == 'price_low' %}selected{% endif %}>Price: Low to High</option>
-                        <option value="price_high" {% if request.GET.sort == 'price_high' %}selected{% endif %}>Price: High to Low</option>
-                        <option value="-average_rating" {% if request.GET.sort == '-average_rating' %}selected{% endif %}>Highest Rated</option>
+                        <option value="-created_at" {% if request.GET.sort=='-created_at' %}selected{% endif %}>Newest
+                        </option>
+                        <option value="price_low" {% if request.GET.sort=='price_low' %}selected{% endif %}>Price: Low
+                            to High</option>
+                        <option value="price_high" {% if request.GET.sort=='price_high' %}selected{% endif %}>Price:
+                            High to Low</option>
+                        <option value="-average_rating" {% if request.GET.sort=='-average_rating' %}selected{% endif %}>
+                            Highest Rated</option>
                     </select>
                 </div>
-                
-                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Apply Filters</button>
-                <a href="{% url 'store:laptops' %}" class="btn btn-outline" style="width: 100%; margin-top: 0.5rem;">Clear Filters</a>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">Apply
+                    Filters</button>
+                <a href="{% url 'store:laptops' %}" class="btn btn-outline"
+                    style="width: 100%; margin-top: 0.5rem;">Clear Filters</a>
             </form>
         </aside>
-        
+
         <!-- Laptops Grid -->
         <main class="products-main">
             <div class="products-header">
@@ -143,7 +165,7 @@
                     <button class="view-btn"><i class="fas fa-list"></i></button>
                 </div>
             </div>
-            
+
             <div class="products-grid">
                 {% for product in laptops %}
                 <div class="product-card">
@@ -154,27 +176,29 @@
                     {% elif product.discount_percentage > 0 %}
                     <div class="product-badge">SAVE {{ product.discount_percentage }}%</div>
                     {% endif %}
-                    
+
                     <a href="{% url 'store:product_detail' product.slug %}">
                         <div class="product-image">
                             {% if product.main_image %}
                             <img src="{{ product.main_image.url }}" alt="{{ product.name }}">
                             {% else %}
-                            <div style="background: linear-gradient(135deg, #1a1a2e 0%, #0056d6 100%); width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: white;">
+                            <div
+                                style="background: linear-gradient(135deg, #1a1a2e 0%, #0056d6 100%); width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: white;">
                                 <i class="fas fa-laptop" style="font-size: 4rem;"></i>
                             </div>
                             {% endif %}
                         </div>
                     </a>
-                    
+
                     <div class="product-info">
                         <span class="product-category">{{ product.category.name }}</span>
                         <h3 class="product-title">
-                            <a href="{% url 'store:product_detail' product.slug %}" style="color: inherit; text-decoration: none;">
+                            <a href="{% url 'store:product_detail' product.slug %}"
+                                style="color: inherit; text-decoration: none;">
                                 {{ product.name|truncatechars:70 }}
                             </a>
                         </h3>
-                        
+
                         <div class="specs" style="font-size: 0.85rem; color: var(--gray); margin: 0.5rem 0;">
                             <div><i class="fas fa-microchip"></i> {{ product.brand }} • {{ product.model }}</div>
                             {% if product.stock_quantity > 0 %}
@@ -183,29 +207,29 @@
                             <div><i class="fas fa-times-circle" style="color: var(--danger);"></i> Out of Stock</div>
                             {% endif %}
                         </div>
-                        
+
                         <div class="product-rating">
                             {% for i in "12345" %}
-                                {% if forloop.counter <= product.average_rating|add:"0" %}
-                                    <i class="fas fa-star"></i>
-                                {% elif forloop.counter <= product.average_rating|add:"0.5" %}
-                                    <i class="fas fa-star-half-alt"></i>
-                                {% else %}
+                            {% if forloop.counter <= product.average_rating|add:"0" %} <i class="fas fa-star"></i>
+                                {% elif forloop.counter <= product.average_rating|add:"0.5" %} <i
+                                    class="fas fa-star-half-alt"></i>
+                                    {% else %}
                                     <i class="far fa-star"></i>
-                                {% endif %}
-                            {% endfor %}
-                            <span>({{ product.review_count }})</span>
+                                    {% endif %}
+                                    {% endfor %}
+                                    <span>({{ product.review_count }})</span>
                         </div>
-                        
+
                         <div class="product-price">
                             <span class="price-bdt">{{ product.current_price|floatformat:0|intcomma }}</span>
                             {% if product.discount_percentage > 0 %}
                             <span class="original-price">৳{{ product.price_bdt|floatformat:0|intcomma }}</span>
                             {% endif %}
                         </div>
-                        
+
                         <div class="product-actions">
-                            <button class="add-to-cart" onclick="addToCart({{ product.id }})" {% if product.stock_quantity == 0 %}disabled{% endif %}>
+                            <button class="add-to-cart" onclick="addToCart({{ product.id }})" {% if
+                                product.stock_quantity==0 %}disabled{% endif %}>
                                 {% if product.stock_quantity == 0 %}Out of Stock{% else %}Add to Cart{% endif %}
                             </button>
                             <button class="add-to-wishlist" onclick="addToWishlist({{ product.id }})">
@@ -223,13 +247,14 @@
                 </div>
                 {% endfor %}
             </div>
-            
+
             <!-- Laptop Categories -->
             <div class="laptop-categories" style="margin-top: 4rem;">
                 <h3 style="margin-bottom: 2rem;">Shop by Laptop Type</h3>
                 <div class="categories-grid">
                     <a href="#" class="category-card">
-                        <div class="category-image" style="background: linear-gradient(135deg, #0056d6 0%, #003a9c 100%);">
+                        <div class="category-image"
+                            style="background: linear-gradient(135deg, #0056d6 0%, #003a9c 100%);">
                             <i class="fas fa-gamepad"></i>
                         </div>
                         <div class="category-info">
@@ -237,9 +262,10 @@
                             <p>High-performance laptops for gaming with dedicated graphics</p>
                         </div>
                     </a>
-                    
+
                     <a href="#" class="category-card">
-                        <div class="category-image" style="background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);">
+                        <div class="category-image"
+                            style="background: linear-gradient(135deg, #28a745 0%, #1e7e34 100%);">
                             <i class="fas fa-briefcase"></i>
                         </div>
                         <div class="category-info">
@@ -247,9 +273,10 @@
                             <p>Reliable laptops for work and productivity</p>
                         </div>
                     </a>
-                    
+
                     <a href="#" class="category-card">
-                        <div class="category-image" style="background: linear-gradient(135deg, #ff6b00 0%, #e05a00 100%);">
+                        <div class="category-image"
+                            style="background: linear-gradient(135deg, #ff6b00 0%, #e05a00 100%);">
                             <i class="fas fa-graduation-cap"></i>
                         </div>
                         <div class="category-info">
@@ -257,9 +284,10 @@
                             <p>Budget-friendly laptops for students</p>
                         </div>
                     </a>
-                    
+
                     <a href="#" class="category-card">
-                        <div class="category-image" style="background: linear-gradient(135deg, #6f42c1 0%, #5a32a3 100%);">
+                        <div class="category-image"
+                            style="background: linear-gradient(135deg, #6f42c1 0%, #5a32a3 100%);">
                             <i class="fas fa-lightbulb"></i>
                         </div>
                         <div class="category-info">
@@ -269,9 +297,10 @@
                     </a>
                 </div>
             </div>
-            
+
             <!-- Bangladesh Laptop Info -->
-            <div class="bangladesh-info" style="background: var(--light-gray); padding: 2rem; border-radius: var(--border-radius); margin-top: 3rem;">
+            <div class="bangladesh-info"
+                style="background: var(--light-gray); padding: 2rem; border-radius: var(--border-radius); margin-top: 3rem;">
                 <h3 style="margin-bottom: 1.5rem;">Laptops in Bangladesh - PC Nexus</h3>
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem;">
                     <div>
@@ -301,23 +330,23 @@
         margin: 2rem 0 3rem;
         text-align: center;
     }
-    
+
     .page-header h1 {
         font-size: 2.5rem;
         margin-bottom: 0.5rem;
     }
-    
+
     .page-header p {
         color: var(--gray);
         font-size: 1.1rem;
     }
-    
+
     .product-layout {
         display: grid;
         grid-template-columns: 250px 1fr;
         gap: 2rem;
     }
-    
+
     .filters-sidebar {
         background: white;
         padding: 1.5rem;
@@ -327,51 +356,51 @@
         position: sticky;
         top: 120px;
     }
-    
+
     .filters-sidebar h3 {
         margin-bottom: 1.5rem;
         padding-bottom: 0.5rem;
         border-bottom: 2px solid var(--light-gray);
     }
-    
+
     .filter-group {
         margin-bottom: 1.5rem;
     }
-    
+
     .filter-group h4 {
         font-size: 0.9rem;
         color: var(--gray-dark);
         margin-bottom: 0.5rem;
         font-weight: 600;
     }
-    
+
     .price-inputs {
         display: flex;
         align-items: center;
         gap: 0.5rem;
     }
-    
+
     .price-inputs input {
         flex: 1;
         padding: 0.5rem;
     }
-    
+
     .price-inputs span {
         color: var(--gray);
     }
-    
+
     .products-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 2rem;
     }
-    
+
     .view-toggle {
         display: flex;
         gap: 0.5rem;
     }
-    
+
     .view-btn {
         padding: 0.5rem 1rem;
         background: white;
@@ -380,13 +409,13 @@
         cursor: pointer;
         transition: var(--transition);
     }
-    
+
     .view-btn.active {
         background: var(--primary);
         color: white;
         border-color: var(--primary);
     }
-    
+
     .no-products {
         grid-column: 1 / -1;
         text-align: center;
@@ -395,21 +424,21 @@
         border-radius: var(--border-radius);
         box-shadow: var(--box-shadow);
     }
-    
+
     .laptop-categories {
         margin-top: 3rem;
     }
-    
+
     .laptop-categories h3 {
         color: var(--dark);
         margin-bottom: 1.5rem;
     }
-    
+
     .bangladesh-info h3 {
         color: var(--dark);
         margin-bottom: 1.5rem;
     }
-    
+
     .bangladesh-info h4 {
         color: var(--dark);
         margin-bottom: 0.5rem;
@@ -417,51 +446,51 @@
         align-items: center;
         gap: 0.5rem;
     }
-    
+
     .bangladesh-info p {
         color: var(--gray);
         font-size: 0.95rem;
     }
-    
+
     .badge {
         display: inline-block;
         font-size: 0.85rem;
         font-weight: 600;
     }
-    
+
     .specs div {
         display: flex;
         align-items: center;
         gap: 0.5rem;
         margin: 0.3rem 0;
     }
-    
+
     @media (max-width: 992px) {
         .product-layout {
             grid-template-columns: 1fr;
         }
-        
+
         .filters-sidebar {
             position: static;
         }
     }
-    
+
     @media (max-width: 768px) {
         .page-header h1 {
             font-size: 2rem;
         }
-        
-        .category-banner > div {
+
+        .category-banner>div {
             grid-template-columns: 1fr;
             text-align: center;
         }
     }
-    
+
     @media (max-width: 576px) {
         .products-grid {
             grid-template-columns: 1fr;
         }
-        
+
         .categories-grid {
             grid-template-columns: 1fr;
         }
@@ -469,12 +498,12 @@
 </style>
 
 <script>
-function addToCart(productId) {
-    alert('Laptop added to cart!');
-}
+    function addToCart(productId) {
+        alert('Laptop added to cart!');
+    }
 
-function addToWishlist(productId) {
-    alert('Laptop added to wishlist!');
-}
+    function addToWishlist(productId) {
+        alert('Laptop added to wishlist!');
+    }
 </script>
 {% endblock %}

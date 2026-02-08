@@ -10,7 +10,7 @@
         <h1>{{ category.name }}</h1>
         <p>{{ category.description }}</p>
     </div>
-    
+
     <div class="products-grid">
         {% for product in products %}
         <div class="product-card">
@@ -21,55 +21,57 @@
             {% elif product.discount_percentage > 0 %}
             <div class="product-badge">SAVE {{ product.discount_percentage }}%</div>
             {% endif %}
-            
+
             <a href="{% url 'store:product_detail' product.slug %}">
                 <div class="product-image">
                     {% if product.main_image %}
                     <img src="{{ product.main_image.url }}" alt="{{ product.name }}">
                     {% else %}
-                    <div style="background-color: #0d1b2a; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: white;">
+                    <div
+                        style="background-color: #0d1b2a; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: white;">
                         <i class="{{ product.category.icon }}" style="font-size: 4rem;"></i>
                     </div>
                     {% endif %}
                 </div>
             </a>
-            
+
             <div class="product-info">
                 <span class="product-category">{{ product.category.name }}</span>
                 <h3 class="product-title">
-                    <a href="{% url 'store:product_detail' product.slug %}" style="color: inherit; text-decoration: none;">
+                    <a href="{% url 'store:product_detail' product.slug %}"
+                        style="color: inherit; text-decoration: none;">
                         {{ product.name|truncatechars:70 }}
                     </a>
                 </h3>
-                
+
                 <div class="product-rating">
                     {% for i in "12345" %}
-                        {% if forloop.counter <= product.average_rating|add:"0" %}
-                            <i class="fas fa-star"></i>
-                        {% elif forloop.counter <= product.average_rating|add:"0.5" %}
-                            <i class="fas fa-star-half-alt"></i>
-                        {% else %}
+                    {% if forloop.counter <= product.average_rating|add:"0" %} <i class="fas fa-star"></i>
+                        {% elif forloop.counter <= product.average_rating|add:"0.5" %} <i class="fas fa-star-half-alt">
+                            </i>
+                            {% else %}
                             <i class="far fa-star"></i>
-                        {% endif %}
-                    {% endfor %}
-                    <span>({{ product.review_count }})</span>
+                            {% endif %}
+                            {% endfor %}
+                            <span>({{ product.review_count }})</span>
                 </div>
-                
-                <div class="stock-status {% if product.stock_quantity == 0 %}stock-out{% elif product.stock_quantity < 10 %}stock-low{% else %}stock-in{% endif %}">
+
+                <div
+                    class="stock-status {% if product.stock_quantity == 0 %}stock-out{% elif product.stock_quantity < 10 %}stock-low{% else %}stock-in{% endif %}">
                     {{ product.stock_status }}
                 </div>
-                
+
                 <div class="product-price">
                     <span class="price-bdt">{{ product.current_price|floatformat:0|intcomma }}</span>
                     {% if product.discount_percentage > 0 %}
                     <span class="original-price">৳{{ product.price_bdt|floatformat:0|intcomma }}</span>
                     {% endif %}
                 </div>
-                
+
                 <div class="product-actions">
                     <form method="POST" action="{% url 'store:add_to_cart' product.id %}" class="add-to-cart-form">
                         {% csrf_token %}
-                        <button type="submit" class="add-to-cart" {% if product.stock_quantity == 0 %}disabled{% endif %}>
+                        <button type="submit" class="add-to-cart" {% if product.stock_quantity==0 %}disabled{% endif %}>
                             {% if product.stock_quantity == 0 %}Out of Stock{% else %}Add to Cart{% endif %}
                         </button>
                     </form>
@@ -84,7 +86,7 @@
         </div>
         {% endfor %}
     </div>
-    
+
     <!-- Pagination -->
     {% if products.paginator.num_pages > 1 %}
     <div class="pagination">
@@ -93,11 +95,11 @@
             <i class="fas fa-chevron-left"></i> Previous
         </a>
         {% endif %}
-        
+
         <span class="current-page">
             Page {{ products.number }} of {{ products.paginator.num_pages }}
         </span>
-        
+
         {% if products.has_next %}
         <a href="?page={{ products.next_page_number }}" class="page-link">
             Next <i class="fas fa-chevron-right"></i>
