@@ -955,3 +955,10 @@ def laptops(request):
     }
     
     return render(request, 'store/laptops.html', context)
+
+
+def pc_builder(request):
+    context = {
+        'title': 'PC Builder Tool',
+    }
+    return render(request, 'store/pc_builder.html', context)

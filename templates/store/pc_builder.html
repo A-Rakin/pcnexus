@@ -1,0 +1,864 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}PC Builder Tool | PC Nexus Bangladesh{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- PC Builder Header -->
+    <div class="page-header">
+        <h1>PC Builder Tool</h1>
+        <p>Build your dream PC with our compatibility-checking tool</p>
+    </div>
+
+    <!-- PC Builder Banner -->
+    <div class="builder-banner"
+        style="background: linear-gradient(135deg, #1a1a2e 0%, #0056d6 100%); color: white; padding: 3rem; border-radius: var(--border-radius); margin: 2rem 0;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center;">
+            <div>
+                <h2 style="color: white; margin-bottom: 1rem;">Build Your Dream PC</h2>
+                <p style="font-size: 1.1rem; opacity: 0.9;">Select compatible components, check prices, and build the
+                    perfect PC for gaming, work, or creativity.</p>
+                <div style="display: flex; gap: 1rem; margin-top: 2rem; flex-wrap: wrap;">
+                    <span class="badge"
+                        style="background: var(--secondary); padding: 0.5rem 1rem; border-radius: 4px;">Compatibility
+                        Check</span>
+                    <span class="badge"
+                        style="background: #28a745; padding: 0.5rem 1rem; border-radius: 4px;">Bangladesh Prices</span>
+                    <span class="badge" style="background: #6f42c1; padding: 0.5rem 1rem; border-radius: 4px;">Expert
+                        Recommendations</span>
+                </div>
+            </div>
+            <div style="text-align: center;">
+                <i class="fas fa-desktop" style="font-size: 8rem; opacity: 0.8;"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- PC Builder Tool -->
+    <div class="pc-builder-tool">
+        <div class="builder-layout">
+            <!-- Components Selection -->
+            <div class="components-selection">
+                <h3>Select Components</h3>
+
+                <div class="components-list">
+                    <!-- Processor -->
+                    <div class="component-card" id="processor-card">
+                        <div class="component-header">
+                            <div class="component-icon">
+                                <i class="fas fa-microchip"></i>
+                            </div>
+                            <div class="component-info">
+                                <h4>Processor (CPU)</h4>
+                                <p class="component-status">Not selected</p>
+                            </div>
+                        </div>
+                        <button class="btn btn-outline select-component" onclick="selectComponent('processor')">
+                            Select CPU
+                        </button>
+                    </div>
+
+                    <!-- Motherboard -->
+                    <div class="component-card" id="motherboard-card">
+                        <div class="component-header">
+                            <div class="component-icon">
+                                <i class="fas fa-server"></i>
+                            </div>
+                            <div class="component-info">
+                                <h4>Motherboard</h4>
+                                <p class="component-status">Not selected</p>
+                            </div>
+                        </div>
+                        <button class="btn btn-outline select-component" onclick="selectComponent('motherboard')">
+                            Select Motherboard
+                        </button>
+                    </div>
+
+                    <!-- Graphics Card -->
+                    <div class="component-card" id="gpu-card">
+                        <div class="component-header">
+                            <div class="component-icon">
+                                <i class="fas fa-gamepad"></i>
+                            </div>
+                            <div class="component-info">
+                                <h4>Graphics Card (GPU)</h4>
+                                <p class="component-status">Not selected</p>
+                            </div>
+                        </div>
+                        <button class="btn btn-outline select-component" onclick="selectComponent('gpu')">
+                            Select GPU
+                        </button>
+                    </div>
+
+                    <!-- RAM -->
+                    <div class="component-card" id="ram-card">
+                        <div class="component-header">
+                            <div class="component-icon">
+                                <i class="fas fa-memory"></i>
+                            </div>
+                            <div class="component-info">
+                                <h4>Memory (RAM)</h4>
+                                <p class="component-status">Not selected</p>
+                            </div>
+                        </div>
+                        <button class="btn btn-outline select-component" onclick="selectComponent('ram')">
+                            Select RAM
+                        </button>
+                    </div>
+
+                    <!-- Storage -->
+                    <div class="component-card" id="storage-card">
+                        <div class="component-header">
+                            <div class="component-icon">
+                                <i class="fas fa-hdd"></i>
+                            </div>
+                            <div class="component-info">
+                                <h4>Storage (SSD/HDD)</h4>
+                                <p class="component-status">Not selected</p>
+                            </div>
+                        </div>
+                        <button class="btn btn-outline select-component" onclick="selectComponent('storage')">
+                            Select Storage
+                        </button>
+                    </div>
+
+                    <!-- Power Supply -->
+                    <div class="component-card" id="psu-card">
+                        <div class="component-header">
+                            <div class="component-icon">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <div class="component-info">
+                                <h4>Power Supply (PSU)</h4>
+                                <p class="component-status">Not selected</p>
+                            </div>
+                        </div>
+                        <button class="btn btn-outline select-component" onclick="selectComponent('psu')">
+                            Select PSU
+                        </button>
+                    </div>
+
+                    <!-- PC Case -->
+                    <div class="component-card" id="case-card">
+                        <div class="component-header">
+                            <div class="component-icon">
+                                <i class="fas fa-box"></i>
+                            </div>
+                            <div class="component-info">
+                                <h4>PC Case</h4>
+                                <p class="component-status">Not selected</p>
+                            </div>
+                        </div>
+                        <button class="btn btn-outline select-component" onclick="selectComponent('case')">
+                            Select Case
+                        </button>
+                    </div>
+
+                    <!-- Cooling -->
+                    <div class="component-card" id="cooling-card">
+                        <div class="component-header">
+                            <div class="component-icon">
+                                <i class="fas fa-fan"></i>
+                            </div>
+                            <div class="component-info">
+                                <h4>CPU Cooler</h4>
+                                <p class="component-status">Not selected</p>
+                            </div>
+                        </div>
+                        <button class="btn btn-outline select-component" onclick="selectComponent('cooling')">
+                            Select Cooler
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Build Summary -->
+            <div class="build-summary">
+                <div class="summary-card">
+                    <h3>Your PC Build</h3>
+
+                    <div class="build-details">
+                        <div class="total-price">
+                            <span>Total Estimated Price:</span>
+                            <span class="price" id="total-price">৳0</span>
+                        </div>
+
+                        <div class="compatibility-status">
+                            <h4>Compatibility Status</h4>
+                        </div>
+
+                        <div class="build-actions">
+                            <button class="btn btn-primary" style="width: 100%;" onclick="saveBuild()">
+                                <i class="fas fa-save"></i> Save Build
+                            </button>
+                            <button class="btn btn-outline" style="width: 100%; margin-top: 0.5rem;"
+                                onclick="clearBuild()">
+                                <i class="fas fa-redo"></i> Clear Build
+                            </button>
+                            <button class="btn btn-secondary" style="width: 100%; margin-top: 0.5rem;"
+                                onclick="shareBuild()">
+                                <i class="fas fa-share"></i> Share Build
+                            </button>
+                        </div>
+
+                        <div class="bangladesh-info"
+                            style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--light-gray);">
+                            <h4>Bangladesh Specific</h4>
+                            <ul style="color: var(--gray); font-size: 0.9rem; margin-top: 0.5rem;">
+                                <li>✅ All prices in Bangladeshi Taka (৳)</li>
+                                <li>✅ Import duty included</li>
+                                <li>✅ Official warranty on all components</li>
+                                <li>✅ Cash on delivery available</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Builds -->
+                <div class="quick-builds" style="margin-top: 2rem;">
+                    <h3>Quick Builds</h3>
+                    <div class="quick-build-cards">
+                        <div class="quick-build-card" onclick="loadQuickBuild('budget')">
+                            <h4>Budget Gaming</h4>
+                            <p>1080p Gaming</p>
+                            <span class="price">৳65,000 - ৳85,000</span>
+                        </div>
+                        <div class="quick-build-card" onclick="loadQuickBuild('midrange')">
+                            <h4>Mid-Range Gaming</h4>
+                            <p>1440p Gaming</p>
+                            <span class="price">৳1,20,000 - ৳1,50,000</span>
+                        </div>
+                        <div class="quick-build-card" onclick="loadQuickBuild('high')">
+                            <h4>High-End Gaming</h4>
+                            <p>4K Gaming</p>
+                            <span class="price">৳2,00,000+</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Component Selection Modal -->
+    <div class="modal" id="component-modal"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+        <div class="modal-content"
+            style="background: white; padding: 2rem; border-radius: var(--border-radius); max-width: 800px; width: 90%; max-height: 80vh; overflow-y: auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h3 id="modal-title">Select Component</h3>
+                <button onclick="closeModal()"
+                    style="background: none; border: none; font-size: 1.5rem; cursor: pointer;">&times;</button>
+            </div>
+            <div id="modal-body">
+                <!-- Component options will be loaded here -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .page-header {
+        margin: 2rem 0 3rem;
+        text-align: center;
+    }
+
+    .page-header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .page-header p {
+        color: var(--gray);
+        font-size: 1.1rem;
+    }
+
+    .pc-builder-tool {
+        margin: 3rem 0;
+    }
+
+    .builder-layout {
+        display: grid;
+        grid-template-columns: 1fr 350px;
+        gap: 2rem;
+    }
+
+    .components-selection h3 {
+        margin-bottom: 1.5rem;
+        color: var(--dark);
+    }
+
+    .components-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .component-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: var(--transition);
+    }
+
+    .component-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .component-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .component-icon {
+        width: 50px;
+        height: 50px;
+        background: var(--light-gray);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: var(--primary);
+    }
+
+    .component-info h4 {
+        margin-bottom: 0.25rem;
+        color: var(--dark);
+    }
+
+    .component-status {
+        color: var(--gray);
+        font-size: 0.9rem;
+    }
+
+    .select-component {
+        white-space: nowrap;
+    }
+
+    .build-summary {
+        position: sticky;
+        top: 120px;
+    }
+
+    .summary-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+    }
+
+    .summary-card h3 {
+        margin-bottom: 1.5rem;
+        color: var(--dark);
+    }
+
+    .total-price {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+        background: var(--light-gray);
+        border-radius: var(--border-radius);
+        margin-bottom: 1.5rem;
+        font-weight: 600;
+    }
+
+    .total-price .price {
+        font-size: 1.5rem;
+        color: var(--primary);
+        font-weight: 700;
+    }
+
+    .compatibility-status {
+        margin-bottom: 1.5rem;
+    }
+
+    .compatibility-status h4 {
+        margin-bottom: 1rem;
+        color: var(--dark);
+    }
+
+    .status-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+        color: var(--gray-dark);
+        font-size: 0.9rem;
+    }
+
+    .build-actions {
+        margin-bottom: 1.5rem;
+    }
+
+    .quick-builds h3 {
+        margin-bottom: 1rem;
+        color: var(--dark);
+    }
+
+    .quick-build-cards {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .quick-build-card {
+        background: white;
+        padding: 1rem;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+    .quick-build-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .quick-build-card h4 {
+        margin-bottom: 0.5rem;
+        color: var(--dark);
+    }
+
+    .quick-build-card p {
+        color: var(--gray);
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .quick-build-card .price {
+        color: var(--primary);
+        font-weight: 600;
+    }
+
+    .badge {
+        display: inline-block;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    @media (max-width: 992px) {
+        .builder-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .build-summary {
+            position: static;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .page-header h1 {
+            font-size: 2rem;
+        }
+
+        .builder-banner>div {
+            grid-template-columns: 1fr;
+            text-align: center;
+        }
+
+        .component-card {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .select-component {
+            width: 100%;
+        }
+    }
+</style>
+
+<script>
+    let currentBuild = {
+        processor: null,
+        motherboard: null,
+        gpu: null,
+        ram: null,
+        storage: null,
+        psu: null,
+        case: null,
+        cooling: null
+    };
+
+    let totalPrice = 0;
+
+    function selectComponent(type) {
+        const modal = document.getElementById('component-modal');
+        const title = document.getElementById('modal-title');
+        const body = document.getElementById('modal-body');
+
+        // Set modal title
+        title.textContent = `Select ${type.charAt(0).toUpperCase() + type.slice(1)}`;
+
+        // Load component options
+        const options = getComponentOptions(type);
+        body.innerHTML = options;
+
+        // Show modal
+        modal.style.display = 'flex';
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('component-modal');
+        modal.style.display = 'none';
+    }
+
+    function getComponentOptions(type) {
+        const components = {
+            processor: [
+                { name: 'AMD Ryzen 5 7600X', price: 28500, brand: 'AMD' },
+                { name: 'AMD Ryzen 7 7800X3D', price: 44999, brand: 'AMD' },
+                { name: 'Intel Core i5-13600K', price: 32500, brand: 'Intel' },
+                { name: 'Intel Core i7-14700K', price: 48999, brand: 'Intel' }
+            ],
+            motherboard: [
+                { name: 'ASUS ROG Strix B650-A Gaming', price: 28500, brand: 'ASUS' },
+                { name: 'Gigabyte B650M Aorus Elite AX', price: 26500, brand: 'Gigabyte' },
+                { name: 'MSI MAG B760 Tomahawk WiFi', price: 31500, brand: 'MSI' },
+                { name: 'ASRock B650E Steel Legend', price: 29500, brand: 'ASRock' }
+            ],
+            gpu: [
+                { name: 'NVIDIA RTX 4060 8GB', price: 45500, brand: 'NVIDIA' },
+                { name: 'NVIDIA RTX 4070 SUPER 12GB', price: 78999, brand: 'NVIDIA' },
+                { name: 'AMD RX 7600 8GB', price: 39500, brand: 'AMD' },
+                { name: 'AMD RX 7800 XT 16GB', price: 68999, brand: 'AMD' }
+            ],
+            ram: [
+                { name: '16GB (2x8GB) DDR5 6000MHz', price: 8500, brand: 'Corsair' },
+                { name: '32GB (2x16GB) DDR5 6000MHz', price: 16500, brand: 'G.Skill' },
+                { name: '32GB (2x16GB) DDR5 6400MHz', price: 18500, brand: 'Team Group' },
+                { name: '64GB (2x32GB) DDR5 6000MHz', price: 32500, brand: 'Corsair' }
+            ],
+            storage: [
+                { name: '1TB NVMe Gen4 SSD', price: 8500, brand: 'Samsung' },
+                { name: '2TB NVMe Gen4 SSD', price: 14500, brand: 'WD Black' },
+                { name: '500GB NVMe Gen4 SSD', price: 5500, brand: 'Crucial' },
+                { name: '4TB HDD 7200RPM', price: 12500, brand: 'Seagate' }
+            ],
+            psu: [
+                { name: '750W 80+ Gold Fully Modular', price: 11500, brand: 'Corsair' },
+                { name: '850W 80+ Gold Fully Modular', price: 14500, brand: 'Seasonic' },
+                { name: '650W 80+ Bronze Semi-Modular', price: 7500, brand: 'Cooler Master' },
+                { name: '1000W 80+ Platinum', price: 22500, brand: 'EVGA' }
+            ],
+            case: [
+                { name: 'NZXT H5 Flow RGB', price: 8500, brand: 'NZXT' },
+                { name: 'Lian Li Lancool 216', price: 9500, brand: 'Lian Li' },
+                { name: 'Corsair 4000D Airflow', price: 7500, brand: 'Corsair' },
+                { name: 'Fractal Design North', price: 12500, brand: 'Fractal' }
+            ],
+            cooling: [
+                { name: 'DeepCool AK620 Air Cooler', price: 5500, brand: 'DeepCool' },
+                { name: 'Noctua NH-D15', price: 11500, brand: 'Noctua' },
+                { name: 'Corsair H100i RGB Liquid Cooler', price: 14500, brand: 'Corsair' },
+                { name: 'Stock CPU Cooler', price: 0, brand: 'Included' }
+            ]
+        };
+
+        let html = `<div class="component-options" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem;">`;
+
+        components[type].forEach(component => {
+            html += `
+        <div class="component-option" style="border: 1px solid var(--light-gray); border-radius: var(--border-radius); padding: 1rem; cursor: pointer; transition: all 0.2s;" 
+             onclick="addComponent('${type}', '${component.name}', ${component.price}, '${component.brand}')">
+            <div style="font-weight: 600; margin-bottom: 0.5rem;">${component.name}</div>
+            <div style="color: var(--gray); font-size: 0.9rem; margin-bottom: 0.5rem;">${component.brand}</div>
+            <div style="color: var(--primary); font-weight: 600;">৳${component.price.toLocaleString('en-IN')}</div>
+        </div>`;
+        });
+
+        html += `</div>`;
+
+        // Add custom option
+        html += `
+    <div style="margin-top: 2rem;">
+        <h4 style="margin-bottom: 1rem;">Custom Component</h4>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <input type="text" id="custom-component-name" placeholder="Component name" style="flex: 1; padding: 0.5rem; border: 1px solid var(--light-gray); border-radius: 4px;">
+            <input type="number" id="custom-component-price" placeholder="Price (৳)" style="width: 150px; padding: 0.5rem; border: 1px solid var(--light-gray); border-radius: 4px;">
+            <button onclick="addCustomComponent('${type}')" class="btn btn-outline">Add Custom</button>
+        </div>
+    </div>`;
+
+        return html;
+    }
+
+    function addComponent(type, name, price, brand) {
+        currentBuild[type] = { name, price, brand };
+        updateComponentCard(type, name, price);
+        updateTotalPrice();
+        closeModal();
+    }
+
+    function addCustomComponent(type) {
+        const nameInput = document.getElementById('custom-component-name');
+        const priceInput = document.getElementById('custom-component-price');
+
+        const name = nameInput.value || `Custom ${type}`;
+        const price = parseInt(priceInput.value) || 0;
+
+        if (name && price >= 0) {
+            currentBuild[type] = { name, price, brand: 'Custom' };
+            updateComponentCard(type, name, price);
+            updateTotalPrice();
+            closeModal();
+        }
+    }
+
+    function updateComponentCard(type, name, price) {
+        const card = document.getElementById(`${type}-card`);
+        const statusElement = card.querySelector('.component-status');
+
+        statusElement.textContent = name;
+        statusElement.style.color = 'var(--dark)';
+        statusElement.style.fontWeight = '500';
+
+        // Update button text
+        const button = card.querySelector('.select-component');
+        button.textContent = 'Change';
+        button.style.backgroundColor = 'var(--light-gray)';
+    }
+
+    function updateTotalPrice() {
+        totalPrice = 0;
+        Object.values(currentBuild).forEach(component => {
+            if (component) {
+                totalPrice += component.price;
+            }
+        });
+
+        const totalPriceElement = document.getElementById('total-price');
+        totalPriceElement.textContent = `৳${totalPrice.toLocaleString('en-IN')}`;
+
+        // Update compatibility status
+        updateCompatibilityStatus();
+    }
+
+    function updateCompatibilityStatus() {
+        const compatibilityDiv = document.querySelector('.compatibility-status');
+
+        // Clear existing status items (keep the h4)
+        const h4 = compatibilityDiv.querySelector('h4');
+        compatibilityDiv.innerHTML = '';
+        compatibilityDiv.appendChild(h4);
+
+        let allCompatible = true;
+        let warnings = [];
+
+        // Check basic compatibility rules
+        if (currentBuild.processor && currentBuild.motherboard) {
+            const cpu = currentBuild.processor.name.toLowerCase();
+            const mobo = currentBuild.motherboard.name.toLowerCase();
+
+            if (cpu.includes('ryzen') && !mobo.includes('b650') && !mobo.includes('x670')) {
+                warnings.push('CPU-Motherboard socket mismatch (AM5 required for Ryzen 7000)');
+                allCompatible = false;
+            }
+
+            if (cpu.includes('intel') && !mobo.includes('b760') && !mobo.includes('z790')) {
+                warnings.push('CPU-Motherboard socket mismatch (LGA1700 required for Intel 13th/14th Gen)');
+                allCompatible = false;
+            }
+        }
+
+        if (currentBuild.psu && currentBuild.gpu) {
+            const psuWattage = parseInt(currentBuild.psu.name.match(/\d+/)[0]) || 0;
+            const recommendedWattage = currentBuild.gpu.name.includes('RTX 4070') ? 650 :
+                currentBuild.gpu.name.includes('RTX 4060') ? 550 :
+                    currentBuild.gpu.name.includes('RX 7800') ? 700 : 550;
+
+            if (psuWattage < recommendedWattage) {
+                warnings.push(`PSU wattage (${psuWattage}W) might be insufficient for GPU`);
+                allCompatible = false;
+            }
+        }
+
+        if (currentBuild.ram && currentBuild.motherboard) {
+            const ramType = currentBuild.ram.name.includes('DDR5') ? 'DDR5' : 'DDR4';
+            const moboSupportsDDR5 = currentBuild.motherboard.name.includes('B650') ||
+                currentBuild.motherboard.name.includes('X670') ||
+                currentBuild.motherboard.name.includes('B760') ||
+                currentBuild.motherboard.name.includes('Z790');
+
+            if (ramType === 'DDR5' && !moboSupportsDDR5) {
+                warnings.push('DDR5 RAM selected but motherboard might not support DDR5');
+                allCompatible = false;
+            }
+        }
+
+        // Update status display
+        if (allCompatible && Object.values(currentBuild).filter(c => c).length > 0) {
+            compatibilityDiv.innerHTML += `
+        <div class="status-item">
+            <i class="fas fa-check-circle" style="color: var(--success);"></i>
+            <span>All components compatible</span>
+        </div>`;
+        } else if (warnings.length > 0) {
+            warnings.forEach(warning => {
+                compatibilityDiv.innerHTML += `
+            <div class="status-item">
+                <i class="fas fa-exclamation-triangle" style="color: #ffc107;"></i>
+                <span>${warning}</span>
+            </div>`;
+            });
+        } else {
+            compatibilityDiv.innerHTML += `
+        <div class="status-item">
+            <i class="fas fa-info-circle" style="color: var(--primary);"></i>
+            <span>Select components to check compatibility</span>
+        </div>`;
+        }
+    }
+
+    function saveBuild() {
+        if (totalPrice === 0) {
+            alert('Please select at least one component to save your build.');
+            return;
+        }
+
+        const buildName = prompt('Enter a name for your build:', `My PC Build - ${new Date().toLocaleDateString()}`);
+
+        if (buildName) {
+            const savedBuild = {
+                name: buildName,
+                components: currentBuild,
+                totalPrice: totalPrice,
+                date: new Date().toISOString()
+            };
+
+            // Save to localStorage
+            let savedBuilds = JSON.parse(localStorage.getItem('pcBuilds')) || [];
+            savedBuilds.push(savedBuild);
+            localStorage.setItem('pcBuilds', JSON.stringify(savedBuilds));
+
+            // Show success message
+            alert(`Build "${buildName}" saved successfully!\n\nTotal Price: ৳${totalPrice.toLocaleString('en-IN')}`);
+        }
+    }
+
+    function clearBuild() {
+        if (confirm('Are you sure you want to clear all selected components?')) {
+            currentBuild = {
+                processor: null,
+                motherboard: null,
+                gpu: null,
+                ram: null,
+                storage: null,
+                psu: null,
+                case: null,
+                cooling: null
+            };
+
+            // Reset all component cards
+            document.querySelectorAll('.component-card').forEach(card => {
+                const statusElement = card.querySelector('.component-status');
+                const button = card.querySelector('.select-component');
+
+                statusElement.textContent = 'Not selected';
+                statusElement.style.color = '';
+                statusElement.style.fontWeight = '';
+
+                button.textContent = button.textContent.replace('Change', 'Select');
+                button.style.backgroundColor = '';
+            });
+
+            // Reset total price
+            totalPrice = 0;
+            document.getElementById('total-price').textContent = '৳0';
+
+            // Reset compatibility status
+            updateCompatibilityStatus();
+        }
+    }
+
+    function shareBuild() {
+        if (totalPrice === 0) {
+            alert('Please select at least one component to share your build.');
+            return;
+        }
+
+        let shareText = `My PC Build - Total: ৳${totalPrice.toLocaleString('en-IN')}\n\n`;
+
+        Object.entries(currentBuild).forEach(([type, component]) => {
+            if (component) {
+                const typeName = type.charAt(0).toUpperCase() + type.slice(1);
+                shareText += `${typeName}: ${component.name} - ৳${component.price.toLocaleString('en-IN')}\n`;
+            }
+        });
+
+        shareText += `\nBuilt with PC Nexus Bangladesh PC Builder`;
+
+        // Copy to clipboard
+        navigator.clipboard.writeText(shareText).then(() => {
+            alert('Build details copied to clipboard!\n\nYou can now paste it anywhere to share.');
+        }).catch(err => {
+            console.error('Failed to copy: ', err);
+            prompt('Copy the following text to share:', shareText);
+        });
+    }
+
+    function loadQuickBuild(type) {
+        const quickBuilds = {
+            budget: {
+                processor: { name: 'AMD Ryzen 5 5600', price: 16500, brand: 'AMD' },
+                motherboard: { name: 'ASUS Prime B550M-K', price: 12500, brand: 'ASUS' },
+                gpu: { name: 'NVIDIA RTX 4060 8GB', price: 45500, brand: 'NVIDIA' },
+                ram: { name: '16GB (2x8GB) DDR4 3200MHz', price: 5500, brand: 'Corsair' },
+                storage: { name: '1TB NVMe Gen3 SSD', price: 6500, brand: 'Crucial' },
+                psu: { name: '650W 80+ Bronze', price: 5500, brand: 'Cooler Master' },
+                case: { name: 'Budget Micro-ATX Case', price: 4500, brand: 'Local' },
+                cooling: { name: 'Stock CPU Cooler', price: 0, brand: 'Included' }
+            },
+            midrange: {
+                processor: { name: 'AMD Ryzen 5 7600X', price: 28500, brand: 'AMD' },
+                motherboard: { name: 'Gigabyte B650M Aorus Elite AX', price: 26500, brand: 'Gigabyte' },
+                gpu: { name: 'NVIDIA RTX 4070 SUPER 12GB', price: 78999, brand: 'NVIDIA' },
+                ram: { name: '32GB (2x16GB) DDR5 6000MHz', price: 16500, brand: 'G.Skill' },
+                storage: { name: '2TB NVMe Gen4 SSD', price: 14500, brand: 'WD Black' },
+                psu: { name: '750W 80+ Gold Fully Modular', price: 11500, brand: 'Corsair' },
+                case: { name: 'Corsair 4000D Airflow', price: 7500, brand: 'Corsair' },
+                cooling: { name: 'DeepCool AK620 Air Cooler', price: 5500, brand: 'DeepCool' }
+            },
+            high: {
+                processor: { name: 'Intel Core i7-14700K', price: 48999, brand: 'Intel' },
+                motherboard: { name: 'ASUS ROG Strix Z790-F', price: 42500, brand: 'ASUS' },
+                gpu: { name: 'NVIDIA RTX 4090 24GB', price: 185000, brand: 'NVIDIA' },
+                ram: { name: '64GB (2x32GB) DDR5 6000MHz', price: 32500, brand: 'Corsair' },
+                storage: { name: '2TB NVMe Gen4 SSD + 4TB HDD', price: 27000, brand: 'Samsung/Seagate' },
+                psu: { name: '1000W 80+ Platinum', price: 22500, brand: 'EVGA' },
+                case: { name: 'Lian Li O11 Dynamic EVO', price: 18500, brand: 'Lian Li' },
+                cooling: { name: 'Corsair H150i Elite LCD', price: 22500, brand: 'Corsair' }
+            }
+        };
+
+        if (confirm(`Load ${type} build? This will replace your current selections.`)) {
+            currentBuild = JSON.parse(JSON.stringify(quickBuilds[type]));
+
+            // Update all component cards
+            Object.entries(currentBuild).forEach(([type, component]) => {
+                if (component) {
+                    updateComponentCard(type, component.name, component.price);
+                }
+            });
+
+            updateTotalPrice();
+            alert(`${type.charAt(0).toUpperCase() + type.slice(1)} build loaded successfully!`);
+        }
+    }
+
+    // Initialize compatibility status on page load
+    document.addEventListener('DOMContentLoaded', function () {
+        updateCompatibilityStatus();
+    });
+</script>
+{% endblock %}
