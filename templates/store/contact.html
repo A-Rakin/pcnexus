@@ -1,0 +1,516 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}Contact Us | PC Nexus Bangladesh{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb" style="margin: 2rem 0 1rem; font-size: 0.9rem;">
+        <a href="{% url 'store:home' %}">Home</a> &gt;
+        <span>Contact Us</span>
+    </nav>
+
+    <!-- Contact Header -->
+    <div class="page-header" style="margin-bottom: 3rem;">
+        <h1>Contact Us</h1>
+        <p class="text-muted">Get in touch with PC Nexus Bangladesh for support, inquiries, or feedback</p>
+    </div>
+
+    <div class="row">
+        <!-- Contact Information -->
+        <div class="col-md-4">
+            <div class="contact-info"
+                style="background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 2rem; margin-bottom: 2rem;">
+                <h3 style="margin-bottom: 1.5rem; color: #0056d6;">Contact Information</h3>
+
+                <div style="margin-bottom: 2rem;">
+                    <div style="display: flex; align-items: flex-start; margin-bottom: 1rem;">
+                        <div
+                            style="width: 40px; height: 40px; background: #0056d6; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 1rem; flex-shrink: 0;">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div>
+                            <h5 style="margin-bottom: 0.25rem;">Head Office</h5>
+                            <p style="color: #6c757d; margin: 0;">
+                                Level 5, House 10, Road 12, Block C<br>
+                                Banani, Dhaka - 1213<br>
+                                Bangladesh
+                            </p>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: flex-start; margin-bottom: 1rem;">
+                        <div
+                            style="width: 40px; height: 40px; background: #28a745; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 1rem; flex-shrink: 0;">
+                            <i class="fas fa-phone-alt"></i>
+                        </div>
+                        <div>
+                            <h5 style="margin-bottom: 0.25rem;">Phone Numbers</h5>
+                            <p style="color: #6c757d; margin: 0;">
+                                <strong>Hotline:</strong> +880 9611-111111<br>
+                                <strong>Support:</strong> +880 9611-111112<br>
+                                <strong>Sales:</strong> +880 9611-111113
+                            </p>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: flex-start; margin-bottom: 1rem;">
+                        <div
+                            style="width: 40px; height: 40px; background: #dc3545; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 1rem; flex-shrink: 0;">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div>
+                            <h5 style="margin-bottom: 0.25rem;">Email Addresses</h5>
+                            <p style="color: #6c757d; margin: 0;">
+                                <strong>Support:</strong> support@pcnexus.com<br>
+                                <strong>Sales:</strong> sales@pcnexus.com<br>
+                                <strong>Inquiries:</strong> info@pcnexus.com
+                            </p>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; align-items: flex-start;">
+                        <div
+                            style="width: 40px; height: 40px; background: #ffc107; color: #343a40; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 1rem; flex-shrink: 0;">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div>
+                            <h5 style="margin-bottom: 0.25rem;">Business Hours</h5>
+                            <p style="color: #6c757d; margin: 0;">
+                                <strong>Sunday - Thursday:</strong> 9:00 AM - 8:00 PM<br>
+                                <strong>Friday:</strong> 3:00 PM - 8:00 PM<br>
+                                <strong>Saturday:</strong> 10:00 AM - 6:00 PM
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="border-top: 1px solid #e9ecef; padding-top: 1.5rem;">
+                    <h5 style="margin-bottom: 1rem; color: #343a40;">Follow Us</h5>
+                    <div style="display: flex; gap: 1rem;">
+                        <a href="#"
+                            style="width: 40px; height: 40px; background: #1877f2; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none;">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#"
+                            style="width: 40px; height: 40px; background: #1da1f2; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none;">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#"
+                            style="width: 40px; height: 40px; background: #e4405f; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none;">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#"
+                            style="width: 40px; height: 40px; background: #0077b5; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none;">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="col-md-8">
+            <div class="contact-form"
+                style="background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 2rem; margin-bottom: 2rem;">
+                <h3 style="margin-bottom: 1.5rem; color: #0056d6;">Send Us a Message</h3>
+                <p style="color: #6c757d; margin-bottom: 2rem;">Fill out the form below and we'll get back to you as
+                    soon as possible.</p>
+
+                <form method="post" action="{% url 'store:contact' %}">
+                    {% csrf_token %}
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="name" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Full Name
+                                *</label>
+                            <input type="text" id="name" name="name" required
+                                style="width: 100%; padding: 0.75rem; border: 1px solid #ced4da; border-radius: 4px; font-size: 1rem;">
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="email" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Email
+                                Address *</label>
+                            <input type="email" id="email" name="email" required
+                                style="width: 100%; padding: 0.75rem; border: 1px solid #ced4da; border-radius: 4px; font-size: 1rem;">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="phone" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Phone
+                                Number</label>
+                            <input type="tel" id="phone" name="phone"
+                                style="width: 100%; padding: 0.75rem; border: 1px solid #ced4da; border-radius: 4px; font-size: 1rem;">
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="subject"
+                                style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Subject *</label>
+                            <select id="subject" name="subject" required
+                                style="width: 100%; padding: 0.75rem; border: 1px solid #ced4da; border-radius: 4px; font-size: 1rem;">
+                                <option value="">Select a subject</option>
+                                <option value="general">General Inquiry</option>
+                                <option value="sales">Sales & Pricing</option>
+                                <option value="support">Technical Support</option>
+                                <option value="warranty">Warranty & Service</option>
+                                <option value="order">Order Status</option>
+                                <option value="wholesale">Wholesale/Bulk Order</option>
+                                <option value="partnership">Partnership Inquiry</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="message" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">Message
+                            *</label>
+                        <textarea id="message" name="message" rows="5" required
+                            style="width: 100%; padding: 0.75rem; border: 1px solid #ced4da; border-radius: 4px; font-size: 1rem;"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label style="display: flex; align-items: flex-start;">
+                            <input type="checkbox" required style="margin-right: 0.5rem; margin-top: 0.25rem;">
+                            <span style="font-size: 0.9rem; color: #6c757d;">
+                                I agree to the <a href="{% url 'store:privacy_policy' %}"
+                                    style="color: #0056d6;">Privacy Policy</a>
+                                and <a href="{% url 'store:terms_conditions' %}" style="color: #0056d6;">Terms &
+                                    Conditions</a>
+                            </span>
+                        </label>
+                    </div>
+
+                    <button type="submit"
+                        style="background: #0056d6; color: white; border: none; padding: 0.75rem 2rem; border-radius: 4px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.3s;">
+                        Send Message
+                    </button>
+                </form>
+            </div>
+
+            <!-- Store Locations -->
+            <div class="store-locations"
+                style="background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 2rem;">
+                <h3 style="margin-bottom: 1.5rem; color: #0056d6;">Our Store Locations</h3>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div style="border: 1px solid #e9ecef; border-radius: 8px; padding: 1.5rem; height: 100%;">
+                            <h5 style="color: #0056d6; margin-bottom: 0.75rem;">
+                                <i class="fas fa-store" style="margin-right: 0.5rem;"></i>
+                                PC Nexus Banani
+                            </h5>
+                            <p style="color: #6c757d; margin-bottom: 0.5rem;">
+                                <i class="fas fa-map-marker-alt" style="margin-right: 0.5rem;"></i>
+                                Level 5, House 10, Road 12, Block C, Banani, Dhaka
+                            </p>
+                            <p style="color: #6c757d; margin-bottom: 0.5rem;">
+                                <i class="fas fa-phone" style="margin-right: 0.5rem;"></i>
+                                +880 9611-111111
+                            </p>
+                            <p style="color: #6c757d; margin-bottom: 0.5rem;">
+                                <i class="fas fa-clock" style="margin-right: 0.5rem;"></i>
+                                9:00 AM - 8:00 PM (Sat-Thu)
+                            </p>
+                            <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                                <span
+                                    style="background: #e7f1ff; color: #0056d6; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.8rem;">
+                                    Pickup Available
+                                </span>
+                                <span
+                                    style="background: #d4edda; color: #155724; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.8rem;">
+                                    Service Center
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div style="border: 1px solid #e9ecef; border-radius: 8px; padding: 1.5rem; height: 100%;">
+                            <h5 style="color: #0056d6; margin-bottom: 0.75rem;">
+                                <i class="fas fa-store" style="margin-right: 0.5rem;"></i>
+                                PC Nexus Dhanmondi
+                            </h5>
+                            <p style="color: #6c757d; margin-bottom: 0.5rem;">
+                                <i class="fas fa-map-marker-alt" style="margin-right: 0.5rem;"></i>
+                                House 15, Road 8/A, Dhanmondi, Dhaka
+                            </p>
+                            <p style="color: #6c757d; margin-bottom: 0.5rem;">
+                                <i class="fas fa-phone" style="margin-right: 0.5rem;"></i>
+                                +880 9611-111112
+                            </p>
+                            <p style="color: #6c757d; margin-bottom: 0.5rem;">
+                                <i class="fas fa-clock" style="margin-right: 0.5rem;"></i>
+                                9:00 AM - 8:00 PM (Sat-Thu)
+                            </p>
+                            <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                                <span
+                                    style="background: #e7f1ff; color: #0056d6; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.8rem;">
+                                    Pickup Available
+                                </span>
+                                <span
+                                    style="background: #d4edda; color: #155724; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.8rem;">
+                                    Service Center
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div style="border: 1px solid #e9ecef; border-radius: 8px; padding: 1.5rem; height: 100%;">
+                            <h5 style="color: #0056d6; margin-bottom: 0.75rem;">
+                                <i class="fas fa-store" style="margin-right: 0.5rem;"></i>
+                                PC Nexus Chittagong
+                            </h5>
+                            <p style="color: #6c757d; margin-bottom: 0.5rem;">
+                                <i class="fas fa-map-marker-alt" style="margin-right: 0.5rem;"></i>
+                                Shop 5-6, Tower Plaza, GEC Circle, Chittagong
+                            </p>
+                            <p style="color: #6c757d; margin-bottom: 0.5rem;">
+                                <i class="fas fa-phone" style="margin-right: 0.5rem;"></i>
+                                +880 9611-111113
+                            </p>
+                            <p style="color: #6c757d; margin-bottom: 0.5rem;">
+                                <i class="fas fa-clock" style="margin-right: 0.5rem;"></i>
+                                10:00 AM - 7:00 PM (Sat-Thu)
+                            </p>
+                            <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                                <span
+                                    style="background: #e7f1ff; color: #0056d6; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.8rem;">
+                                    Pickup Available
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div style="border: 1px solid #e9ecef; border-radius: 8px; padding: 1.5rem; height: 100%;">
+                            <h5 style="color: #0056d6; margin-bottom: 0.75rem;">
+                                <i class="fas fa-store" style="margin-right: 0.5rem;"></i>
+                                Online Store
+                            </h5>
+                            <p style="color: #6c757d; margin-bottom: 0.5rem;">
+                                <i class="fas fa-globe" style="margin-right: 0.5rem;"></i>
+                                www.pcnexus.com
+                            </p>
+                            <p style="color: #6c757d; margin-bottom: 0.5rem;">
+                                <i class="fas fa-shipping-fast" style="margin-right: 0.5rem;"></i>
+                                Nationwide Delivery
+                            </p>
+                            <p style="color: #6c757d; margin-bottom: 0.5rem;">
+                                <i class="fas fa-clock" style="margin-right: 0.5rem;"></i>
+                                24/7 Online Ordering
+                            </p>
+                            <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                                <span
+                                    style="background: #fff3cd; color: #856404; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.8rem;">
+                                    Cash on Delivery
+                                </span>
+                                <span
+                                    style="background: #d1ecf1; color: #0c5460; padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.8rem;">
+                                    Online Payment
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FAQ Section -->
+    <div class="faq-section" style="margin-top: 4rem;">
+        <h3 style="text-align: center; margin-bottom: 2rem; color: #0056d6;">Frequently Asked Questions</h3>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="faq-item" style="margin-bottom: 1.5rem;">
+                    <h5 style="color: #343a40; margin-bottom: 0.5rem;">
+                        <i class="fas fa-question-circle" style="color: #0056d6; margin-right: 0.5rem;"></i>
+                        How long does delivery take?
+                    </h5>
+                    <p style="color: #6c757d; margin: 0;">
+                        Inside Dhaka: 1-2 business days<br>
+                        Outside Dhaka: 3-5 business days<br>
+                        Remote areas: 5-7 business days
+                    </p>
+                </div>
+
+                <div class="faq-item" style="margin-bottom: 1.5rem;">
+                    <h5 style="color: #343a40; margin-bottom: 0.5rem;">
+                        <i class="fas fa-question-circle" style="color: #0056d6; margin-right: 0.5rem;"></i>
+                        What payment methods do you accept?
+                    </h5>
+                    <p style="color: #6c757d; margin: 0;">
+                        We accept Cash on Delivery, bKash, Nagad, Rocket, Bank Transfer, and Credit/Debit Cards.
+                    </p>
+                </div>
+
+                <div class="faq-item" style="margin-bottom: 1.5rem;">
+                    <h5 style="color: #343a40; margin-bottom: 0.5rem;">
+                        <i class="fas fa-question-circle" style="color: #0056d6; margin-right: 0.5rem;"></i>
+                        Do you offer installation services?
+                    </h5>
+                    <p style="color: #6c757d; margin: 0;">
+                        Yes, we offer professional installation services for PC builds and components. Contact our sales
+                        team for details.
+                    </p>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="faq-item" style="margin-bottom: 1.5rem;">
+                    <h5 style="color: #343a40; margin-bottom: 0.5rem;">
+                        <i class="fas fa-question-circle" style="color: #0056d6; margin-right: 0.5rem;"></i>
+                        What is your return policy?
+                    </h5>
+                    <p style="color: #6c757d; margin: 0;">
+                        We offer 7-day return policy for defective products. Contact us within 7 days of delivery for
+                        returns.
+                    </p>
+                </div>
+
+                <div class="faq-item" style="margin-bottom: 1.5rem;">
+                    <h5 style="color: #343a40; margin-bottom: 0.5rem;">
+                        <i class="fas fa-question-circle" style="color: #0056d6; margin-right: 0.5rem;"></i>
+                        Do you offer warranty on products?
+                    </h5>
+                    <p style="color: #6c757d; margin: 0;">
+                        Yes, all products come with official distributor warranty. Warranty periods vary by product and
+                        brand.
+                    </p>
+                </div>
+
+                <div class="faq-item" style="margin-bottom: 1.5rem;">
+                    <h5 style="color: #343a40; margin-bottom: 0.5rem;">
+                        <i class="fas fa-question-circle" style="color: #0056d6; margin-right: 0.5rem;"></i>
+                        Can I visit your showroom to see products?
+                    </h5>
+                    <p style="color: #6c757d; margin: 0;">
+                        Yes, you're welcome to visit any of our showrooms during business hours. Our staff will be happy
+                        to assist you.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .page-header h1 {
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+        color: #343a40;
+    }
+
+    .contact-info,
+    .contact-form,
+    .store-locations {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .contact-info:hover,
+    .contact-form:hover,
+    .store-locations:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .faq-item {
+        padding: 1.5rem;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s ease;
+    }
+
+    .faq-item:hover {
+        transform: translateX(4px);
+    }
+
+    button[type="submit"]:hover {
+        background: #0041a3 !important;
+    }
+
+    input,
+    select,
+    textarea {
+        transition: border-color 0.3s ease;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+        outline: none;
+        border-color: #0056d6 !important;
+        box-shadow: 0 0 0 0.2rem rgba(0, 86, 214, 0.25);
+    }
+
+    @media (max-width: 768px) {
+        .page-header h1 {
+            font-size: 2rem;
+        }
+
+        .store-locations .row>div {
+            margin-bottom: 1rem;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Form submission handling
+        const contactForm = document.querySelector('form');
+        if (contactForm) {
+            contactForm.addEventListener('submit', function (e) {
+                // Basic form validation
+                const name = document.getElementById('name').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const subject = document.getElementById('subject').value;
+                const message = document.getElementById('message').value.trim();
+
+                if (!name || !email || !subject || !message) {
+                    e.preventDefault();
+                    alert('Please fill in all required fields.');
+                    return;
+                }
+
+                // Email validation
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    e.preventDefault();
+                    alert('Please enter a valid email address.');
+                    return;
+                }
+            });
+        }
+
+        // Phone number formatting (for Bangladesh numbers)
+        const phoneInput = document.getElementById('phone');
+        if (phoneInput) {
+            phoneInput.addEventListener('input', function (e) {
+                let value = e.target.value.replace(/\D/g, '');
+
+                // Format for Bangladesh numbers
+                if (value.length > 0) {
+                    if (value.length <= 4) {
+                        value = value;
+                    } else if (value.length <= 7) {
+                        value = value.slice(0, 4) + '-' + value.slice(4);
+                    } else if (value.length <= 11) {
+                        value = value.slice(0, 4) + '-' + value.slice(4, 7) + '-' + value.slice(7);
+                    } else {
+                        value = value.slice(0, 4) + '-' + value.slice(4, 8) + '-' + value.slice(8, 11);
+                    }
+                }
+
+                e.target.value = value;
+            });
+        }
+    });
+</script>
+{% endblock %}

@@ -1086,3 +1086,163 @@ def user_logout(request):
     logout(request)
     messages.success(request, 'You have been logged out.')
     return redirect('store:home')
+
+def contact(request):
+    """Contact page"""
+    if request.method == 'POST':
+        # Process form data
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        subject = request.POST.get('subject')
+        message = request.POST.get('message')
+        
+        # Here you would typically save to database or send email
+        # For now, just show success message
+        messages.success(request, 'Thank you for your message! We will contact you soon.')
+        return redirect('store:contact')
+    
+    context = {
+        'page_title': 'Contact Us | PC Nexus Bangladesh',
+    }
+    
+    return render(request, 'store/contact.html', context)
+
+# Add these functions to your views.py
+
+def privacy_policy(request):
+    """Privacy Policy page"""
+    context = {
+        'page_title': 'Privacy Policy - PC Nexus Bangladesh',
+    }
+    return render(request, 'store/privacy_policy.html', context)
+
+def terms_conditions(request):
+    """Terms & Conditions page"""
+    context = {
+        'page_title': 'Terms & Conditions - PC Nexus Bangladesh',
+    }
+    return render(request, 'store/terms_conditions.html', context)
+
+def about(request):
+    """About page"""
+    context = {
+        'page_title': 'About Us - PC Nexus Bangladesh',
+    }
+    return render(request, 'store/about.html', context)
+
+def shipping_info(request):
+    """Shipping information for Bangladesh"""
+    locations = BangladeshLocation.objects.all()
+    
+    context = {
+        'locations': locations,
+        'page_title': 'Delivery Information in Bangladesh | PC Nexus',
+    }
+    return render(request, 'store/shipping_info.html', context)
+
+def payment_methods(request):
+    """Payment methods available in Bangladesh"""
+    context = {
+        'page_title': 'Payment Methods in Bangladesh | PC Nexus',
+    }
+    return render(request, 'store/payment_methods.html', context)
+
+def warranty_info(request):
+    """Warranty information for Bangladesh"""
+    context = {
+        'page_title': 'Warranty & Returns in Bangladesh | PC Nexus',
+    }
+    return render(request, 'store/warranty.html', context)
+
+def faq(request):
+    """FAQ for Bangladesh customers"""
+    faqs = [
+        {
+            'question': 'ডেলিভারি চার্জ কত?',
+            'answer': 'ঢাকা শহরে ৳৬০, ঢাকার বাইরে ৳১২০-৳২০০। ৳২০০০+ অর্ডারে ফ্রি শিপিং।'
+        },
+        {
+            'question': 'ডেলিভারি সময় কত?',
+            'answer': 'ঢাকায় ১-২ দিন, বিভাগীয় শহরে ২-৪ দিন, অন্যান্য এলাকায় ৩-৭ দিন।'
+        },
+        {
+            'question': 'পেমেন্ট মেথড কি কি?',
+            'answer': 'ক্যাশ অন ডেলিভারি, bKash, Nagad, Rocket, ব্যাংক ট্রান্সফার, ক্রেডিট/ডেবিট কার্ড।'
+        },
+        {
+            'question': 'প্রোডাক্টের ওয়ারেন্টি কিভাবে পাবো?',
+            'answer': 'সকল প্রোডাক্টের ওয়ারেন্টি কার্ড প্রদান করা হয়। সার্ভিস সেন্টারে সরাসরি ক্লেইম করতে পারবেন।'
+        },
+        {
+            'question': 'রিটার্ন/এক্সচেঞ্জ পলিসি কি?',
+            'answer': 'ডেলিভারির ৭ দিনের মধ্যে ত্রুটিপূর্ণ প্রোডাক্ট রিটার্ন/এক্সচেঞ্জ করতে পারবেন।'
+        },
+    ]
+    
+    context = {
+        'faqs': faqs,
+        'page_title': 'Frequently Asked Questions | PC Nexus Bangladesh',
+    }
+    return render(request, 'store/faq.html', context)
+
+def store_locator(request):
+    """Store locator for Bangladesh"""
+    stores = [
+        {
+            'name': 'PC Nexus Banani',
+            'address': 'Level 5, House 10, Road 12, Block C, Banani, Dhaka',
+            'phone': '+880 9611-111111',
+            'hours': '10:00 AM - 8:00 PM (Sat-Thu)',
+            'services': ['Pickup', 'Service Center', 'Demo Unit']
+        },
+        {
+            'name': 'PC Nexus Dhanmondi',
+            'address': 'House 15, Road 8/A, Dhanmondi, Dhaka',
+            'phone': '+880 9611-111112',
+            'hours': '10:00 AM - 8:00 PM (Sat-Thu)',
+            'services': ['Pickup', 'Service Center']
+        },
+        {
+            'name': 'PC Nexus Chittagong',
+            'address': 'Shop 5-6, Tower Plaza, GEC Circle, Chittagong',
+            'phone': '+880 9611-111113',
+            'hours': '10:00 AM - 8:00 PM (Sat-Thu)',
+            'services': ['Pickup', 'Service Center']
+        },
+    ]
+    
+    context = {
+        'stores': stores,
+        'page_title': 'Store Locator in Bangladesh | PC Nexus',
+    }
+    return render(request, 'store/store_locator.html', context)
+
+def support(request):
+    """Support page"""
+    context = {
+        'page_title': 'Support Center | PC Nexus Bangladesh',
+    }
+    return render(request, 'store/support.html', context)
+
+def deals(request):
+    """Deals and offers page"""
+    discounted_products = Product.objects.filter(
+        discount_percentage__gt=0,
+        is_available=True
+    )
+    
+    context = {
+        'discounted_products': discounted_products,
+        'page_title': 'Deals & Offers | PC Nexus Bangladesh',
+    }
+    return render(request, 'store/deals.html', context)
+
+def newsletter_subscribe(request):
+    """Handle newsletter subscription"""
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        # Here you would typically save to database
+        # For now, just show success message
+        messages.success(request, 'Thank you for subscribing to our newsletter!')
+    
+    return redirect('store:home')

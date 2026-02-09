@@ -55,4 +55,11 @@ urlpatterns = [
     path('faq/', views.faq, name='faq'),
     path('store-locator/', views.store_locator, name='store_locator'),
     path('support/', views.support, name='support'),
+
+    # Legal Pages - ADD THESE MISSING URLS
+    path('privacy-policy/', views.privacy_policy, name='privacy_policy'),
+    path('terms-conditions/', views.terms_conditions, name='terms_conditions'),
+    
+    # Other missing pages
+    path('about/', views.about, name='about'),
 ]

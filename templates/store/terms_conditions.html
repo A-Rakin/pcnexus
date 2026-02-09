@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Terms & Conditions | PC Nexus Bangladesh{% endblock %}
+
+{% block content %}
+<div class="container">
+    <nav class="breadcrumb" style="margin: 2rem 0 1rem; font-size: 0.9rem;">
+        <a href="{% url 'store:home' %}">Home</a> &gt;
+        <span>Terms & Conditions</span>
+    </nav>
+
+    <div class="page-header" style="margin-bottom: 3rem;">
+        <h1>Terms & Conditions</h1>
+        <p class="text-muted">Please read these terms carefully before using our services</p>
+    </div>
+
+    <div style="background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 2rem;">
+        <!-- Add your terms and conditions here -->
+        <h3>Welcome to PC Nexus Bangladesh</h3>
+        <p>By accessing and using this website, you accept and agree to be bound by these terms...</p>
+    </div>
+</div>
+{% endblock %}
