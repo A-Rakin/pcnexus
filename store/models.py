@@ -1,6 +1,10 @@
+# store/models.py
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+import json
+from django.urls import reverse
+from django.utils.text import slugify  # Add this import
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -13,6 +17,14 @@ class Category(models.Model):
     
     def __str__(self):
         return self.name
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+    
+    def get_absolute_url(self):
+        return reverse('category_detail', kwargs={'slug': self.slug})
 
 class Product(models.Model):
     CURRENCY_CHOICES = [
@@ -43,6 +55,7 @@ class Product(models.Model):
     # Stock and availability for Bangladesh
     stock_quantity = models.PositiveIntegerField(default=0)
     is_available = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True)  # Add this for compatibility
     is_imported = models.BooleanField(default=True)
     import_duty_included = models.BooleanField(default=True)
     
@@ -51,17 +64,27 @@ class Product(models.Model):
     model = models.CharField(max_length=100)
     warranty = models.CharField(max_length=20, choices=WARRANTY_CHOICES, default='1')
     
+    # Additional fields for templates
+    short_description = models.TextField(blank=True, null=True)
+    highlights = models.TextField(blank=True, null=True)
+    specifications = models.TextField(blank=True, null=True)
+    old_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    sku = models.CharField(max_length=50, unique=True, blank=True, null=True)
+    
     # Ratings and reviews
     average_rating = models.DecimalField(max_digits=3, decimal_places=2, default=0)
     review_count = models.PositiveIntegerField(default=0)
+    rating = models.DecimalField(max_digits=3, decimal_places=2, default=0)  # Alias
     
     # Featured and promotional flags
     is_featured = models.BooleanField(default=False)
     is_best_seller = models.BooleanField(default=False)
+    is_bestseller = models.BooleanField(default=False)  # Alias
     is_new_arrival = models.BooleanField(default=False)
     
     # Images
     main_image = models.ImageField(upload_to='products/main/')
+    image = models.ImageField(upload_to='products/main/', blank=True, null=True)  # Alias
     image_1 = models.ImageField(upload_to='products/extra/', blank=True)
     image_2 = models.ImageField(upload_to='products/extra/', blank=True)
     image_3 = models.ImageField(upload_to='products/extra/', blank=True)
@@ -76,12 +99,44 @@ class Product(models.Model):
     def __str__(self):
         return self.name
     
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        
+        # Set aliases for compatibility
+        if not self.old_price and self.discount_percentage > 0:
+            self.old_price = self.price_bdt
+        
+        if not self.rating:
+            self.rating = self.average_rating
+        
+        if not self.is_bestseller:
+            self.is_bestseller = self.is_best_seller
+        
+        if not self.image:
+            self.image = self.main_image
+        
+        super().save(*args, **kwargs)
+    
+    def get_absolute_url(self):
+        return reverse('product_detail', kwargs={'slug': self.slug})
+    
     @property
     def current_price(self):
         if self.discount_percentage > 0:
             discount = (self.price_bdt * self.discount_percentage) / 100
             return self.price_bdt - discount
         return self.price_bdt
+    
+    @property
+    def price(self):
+        """Alias for price_bdt for template compatibility"""
+        return self.price_bdt
+    
+    @property
+    def stock(self):
+        """Alias for stock_quantity for template compatibility"""
+        return self.stock_quantity
     
     @property
     def is_in_stock(self):
@@ -95,6 +150,105 @@ class Product(models.Model):
             return f"Only {self.stock_quantity} left"
         else:
             return "In Stock"
+    
+    # Properties for template compatibility
+    @property
+    def highlights_as_list(self):
+        if self.highlights:
+            return [h.strip() for h in self.highlights.split('\n') if h.strip()]
+        return []
+    
+    @property
+    def specifications_as_dict(self):
+        if self.specifications:
+            try:
+                return json.loads(self.specifications)
+            except:
+                return {}
+        return {}
+    
+    def get_quick_specs(self):
+        """Return first 5 specifications"""
+        specs = self.specifications_as_dict
+        return list(specs.items())[:5]
+    
+    def get_full_specs(self):
+        """Return all specifications"""
+        specs = self.specifications_as_dict
+        return list(specs.items())
+    
+    @property
+    def discount_percentage_calculated(self):
+        """Calculate discount percentage if old_price exists"""
+        if self.old_price and self.old_price > self.price_bdt:
+            return round(((self.old_price - self.price_bdt) / self.old_price) * 100)
+        return None
+    
+    @property
+    def save_amount(self):
+        """Calculate save amount if old_price exists"""
+        if self.old_price and self.old_price > self.price_bdt:
+            return self.old_price - self.price_bdt
+        return 0
+    
+    @property
+    def emi_amount(self):
+        """Calculate EMI amount (12 months)"""
+        return round(float(self.current_price) / 12, 2)
+    
+    @property
+    def image_url(self):
+        """Get image URL for JSON serialization"""
+        if self.main_image:
+            return self.main_image.url
+        return ''
+
+# REMOVE THE DUPLICATE Product CLASS DEFINITION FROM HERE DOWN
+# Everything below this line should be removed
+
+# Add the ProductImage model (properly indented, NOT inside Product class)
+class ProductImage(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
+    image = models.ImageField(upload_to='product_images/')
+    alt_text = models.CharField(max_length=200, blank=True)
+    is_primary = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['-is_primary', 'id']
+    
+    def __str__(self):
+        return f"Image for {self.product.name}"
+
+class Review(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='product_reviews')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    rating = models.PositiveIntegerField(choices=[(i, i) for i in range(1, 6)])
+    title = models.CharField(max_length=200, blank=True)
+    content = models.TextField()
+    is_approved = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['-created_at']
+    
+    def __str__(self):
+        return f"Review by {self.user.username} for {self.product.name}"
+
+class FAQ(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='faqs', null=True, blank=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='faqs', null=True, blank=True)
+    question = models.TextField()
+    answer = models.TextField()
+    order = models.IntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['order', '-created_at']
+    
+    def __str__(self):
+        return f"FAQ: {self.question[:50]}..."
 
 class ProductReview(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='reviews')

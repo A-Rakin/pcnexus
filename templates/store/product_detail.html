@@ -1,0 +1,946 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}{{ product.name }} - ৳{{ product.price|intcomma }} | PC Nexus Bangladesh{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb" style="margin: 2rem 0 1rem; font-size: 0.9rem;">
+        <a href="{% url 'home' %}">Home</a> &gt;
+        <a href="{% url 'category_detail' product.category.slug %}">{{ product.category.name }}</a> &gt;
+        <span>{{ product.name|truncatechars:50 }}</span>
+    </nav>
+
+    <!-- Main Product Layout -->
+    <div class="product-detail-layout">
+        <!-- Left Column: Images & Gallery -->
+        <div class="product-images">
+            <!-- Main Image -->
+            <div class="main-image">
+                {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" id="main-product-image"
+                    style="width: 100%; border-radius: var(--border-radius);">
+                {% else %}
+                <div
+                    style="width: 100%; height: 400px; background: var(--light-gray); border-radius: var(--border-radius); display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-box" style="font-size: 4rem; color: var(--gray);"></i>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Image Gallery -->
+            {% if product_images %}
+            <div class="image-gallery" style="margin-top: 1rem;">
+                <div class="gallery-thumbnails" style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    {% for img in product_images %}
+                    <div class="thumbnail {% if forloop.first %}active{% endif %}"
+                        onclick="changeImage('{{ img.image.url }}')"
+                        style="width: 80px; height: 80px; border: 2px solid {% if forloop.first %}var(--primary){% else %}transparent{% endif %}; border-radius: 4px; overflow: hidden; cursor: pointer;">
+                        <img src="{{ img.image.url }}" alt="Product image {{ forloop.counter }}"
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Product Badges -->
+            <div class="product-badges" style="margin-top: 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                {% if product.stock <= 0 %} <span class="badge bg-danger">Out of Stock</span>
+                    {% elif product.stock < 10 %} <span class="badge bg-warning text-dark">Low Stock</span>
+                        {% else %}
+                        <span class="badge bg-success">In Stock</span>
+                        {% endif %}
+
+                        {% if product.warranty %}
+                        <span class="badge bg-info">{{ product.warranty }}</span>
+                        {% endif %}
+
+                        {% if product.is_featured %}
+                        <span class="badge bg-primary">Featured</span>
+                        {% endif %}
+
+                        {% if product.discount_percentage %}
+                        <span class="badge bg-danger">{{ product.discount_percentage }}% OFF</span>
+                        {% endif %}
+            </div>
+        </div>
+
+        <!-- Middle Column: Product Info -->
+        <div class="product-info">
+            <h1 class="product-title">{{ product.name }}</h1>
+
+            <!-- Brand and SKU -->
+            <div class="product-meta" style="margin-bottom: 1rem;">
+                <span class="text-muted">Brand: <strong>{{ product.brand }}</strong></span>
+                <span class="text-muted" style="margin-left: 1rem;">SKU: <strong>{{ product.sku|default:"N/A"
+                        }}</strong></span>
+            </div>
+
+            <!-- Rating -->
+            <div class="product-rating" style="margin-bottom: 1.5rem;">
+                <div class="stars" style="color: #ffc107;">
+                    {% for i in "12345" %}
+                    <i class="fas fa-star {% if forloop.counter <= product.rating %}fas{% else %}far{% endif %}"></i>
+                    {% endfor %}
+                </div>
+                <span style="margin-left: 0.5rem;">
+                    <strong>{{ product.rating|floatformat:1 }}</strong> ({{ product.review_count }} reviews)
+                </span>
+                <a href="#reviews" style="margin-left: 1rem; color: var(--primary); text-decoration: none;">
+                    <i class="fas fa-chevron-right"></i> See all reviews
+                </a>
+            </div>
+
+            <!-- Price -->
+            <div class="product-price-section"
+                style="margin-bottom: 2rem; padding: 1.5rem; background: #f8f9fa; border-radius: var(--border-radius);">
+                <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                    <div class="current-price" style="font-size: 2rem; font-weight: 700; color: var(--primary);">
+                        ৳{{ product.price|intcomma }}
+                    </div>
+
+                    {% if product.old_price %}
+                    <div class="old-price"
+                        style="font-size: 1.25rem; color: var(--gray); text-decoration: line-through;">
+                        ৳{{ product.old_price|intcomma }}
+                    </div>
+
+                    {% if product.discount_percentage %}
+                    <div class="discount" style="font-size: 1rem; color: var(--success); font-weight: 600;">
+                        Save ৳{{ product.save_amount|intcomma }} ({{ product.discount_percentage }}%)
+                    </div>
+                    {% endif %}
+                    {% endif %}
+                </div>
+
+                <!-- Installment Option -->
+                <div class="installment-option" style="margin-top: 1rem; font-size: 0.9rem;">
+                    <i class="fas fa-credit-card" style="color: var(--primary); margin-right: 0.5rem;"></i>
+                    <strong>Installment Available:</strong> ৳{{ product.emi_amount|intcomma }}/month
+                </div>
+            </div>
+
+            <!-- Stock Status -->
+            <div class="stock-status" style="margin-bottom: 2rem;">
+                {% if product.stock > 0 %}
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-check-circle" style="color: var(--success);"></i>
+                    <span>
+                        <strong>In Stock</strong> -
+                        {% if product.stock > 20 %}
+                        Available
+                        {% elif product.stock > 10 %}
+                        Only {{ product.stock }} units left
+                        {% elif product.stock > 0 %}
+                        Only {{ product.stock }} units left - Order soon!
+                        {% endif %}
+                    </span>
+                </div>
+                {% else %}
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-times-circle" style="color: var(--danger);"></i>
+                    <span><strong>Out of Stock</strong> - Check back later or request notification</span>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Add to Cart Section -->
+            <div class="cart-section" style="margin-bottom: 2rem;">
+                {% if product.stock > 0 %}
+                <div class="quantity-selector"
+                    style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                    <label for="quantity" style="font-weight: 600;">Quantity:</label>
+                    <div class="quantity-control"
+                        style="display: flex; align-items: center; border: 1px solid var(--light-gray); border-radius: 4px;">
+                        <button onclick="decreaseQuantity()" class="quantity-btn"
+                            style="padding: 0.5rem 1rem; border: none; background: var(--light-gray); cursor: pointer;">-</button>
+                        <input type="number" id="quantity" value="1" min="1" max="{{ product.stock }}"
+                            style="width: 60px; text-align: center; border: none; padding: 0.5rem;">
+                        <button onclick="increaseQuantity()" class="quantity-btn"
+                            style="padding: 0.5rem 1rem; border: none; background: var(--light-gray); cursor: pointer;">+</button>
+                    </div>
+                    <span class="text-muted" style="font-size: 0.9rem;">Max: {{ product.stock }} units</span>
+                </div>
+
+                <div class="action-buttons" style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <button onclick="addToCart({{ product.id }})" class="btn btn-primary btn-lg"
+                        style="flex: 1; min-width: 200px;">
+                        <i class="fas fa-cart-plus"></i> Add to Cart
+                    </button>
+                    <button onclick="buyNow({{ product.id }})" class="btn btn-success btn-lg"
+                        style="flex: 1; min-width: 200px;">
+                        <i class="fas fa-bolt"></i> Buy Now
+                    </button>
+                    <button onclick="addToWishlist({{ product.id }})" class="btn btn-outline btn-lg" style="flex: 0;">
+                        <i class="far fa-heart"></i>
+                    </button>
+                </div>
+                {% else %}
+                <div class="out-of-stock-actions"
+                    style="padding: 1.5rem; background: #fff3cd; border-radius: var(--border-radius);">
+                    <h4 style="color: #856404; margin-bottom: 1rem;">Currently Out of Stock</h4>
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <button onclick="requestNotification({{ product.id }})" class="btn btn-warning">
+                            <i class="fas fa-bell"></i> Notify When Available
+                        </button>
+                        <button onclick="contactForPreorder()" class="btn btn-outline">
+                            <i class="fas fa-phone-alt"></i> Contact for Pre-order
+                        </button>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Delivery Info -->
+            <div class="delivery-info"
+                style="margin-bottom: 2rem; padding: 1rem; background: #e8f4ff; border-radius: var(--border-radius);">
+                <h4 style="margin-bottom: 1rem; color: var(--primary);">
+                    <i class="fas fa-shipping-fast"></i> Delivery Information
+                </h4>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                    <div>
+                        <div style="font-weight: 600;">Delivery Time</div>
+                        <div style="font-size: 0.9rem;">1-3 business days inside Dhaka</div>
+                    </div>
+                    <div>
+                        <div style="font-weight: 600;">Delivery Charge</div>
+                        <div style="font-size: 0.9rem;">৳60 inside Dhaka, ৳120 outside</div>
+                    </div>
+                    <div>
+                        <div style="font-weight: 600;">Cash on Delivery</div>
+                        <div style="font-size: 0.9rem;">Available nationwide</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product Highlights -->
+            <div class="product-highlights" style="margin-bottom: 2rem;">
+                <h4 style="margin-bottom: 1rem;">Product Highlights</h4>
+                <ul style="padding-left: 1.5rem; color: var(--dark);">
+                    {% for highlight in product.highlights_as_list %}
+                    <li style="margin-bottom: 0.5rem;">{{ highlight }}</li>
+                    {% empty %}
+                    <li>{{ product.short_description }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- Right Column: Seller Info & Specifications -->
+        <div class="product-sidebar">
+            <!-- Seller Info -->
+            <div class="seller-card"
+                style="background: white; padding: 1.5rem; border-radius: var(--border-radius); box-shadow: var(--box-shadow); margin-bottom: 1.5rem;">
+                <h4 style="margin-bottom: 1rem;">Seller Information</h4>
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                    <div
+                        style="width: 50px; height: 50px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem;">
+                        <i class="fas fa-store"></i>
+                    </div>
+                    <div>
+                        <div style="font-weight: 600;">PC Nexus Bangladesh</div>
+                        <div style="font-size: 0.9rem; color: var(--gray);">Official Store</div>
+                    </div>
+                </div>
+                <div style="display: grid; gap: 0.75rem;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-check-circle" style="color: var(--success);"></i>
+                        <span>100% Authentic Products</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-shield-alt" style="color: var(--primary);"></i>
+                        <span>Official Warranty</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-headset" style="color: var(--secondary);"></i>
+                        <span>Dedicated Support</span>
+                    </div>
+                </div>
+                <button onclick="contactSeller()" class="btn btn-outline" style="width: 100%; margin-top: 1rem;">
+                    <i class="fas fa-comment-alt"></i> Chat with Seller
+                </button>
+            </div>
+
+            <!-- Quick Specifications -->
+            <div class="specs-card"
+                style="background: white; padding: 1.5rem; border-radius: var(--border-radius); box-shadow: var(--box-shadow); margin-bottom: 1.5rem;">
+                <h4 style="margin-bottom: 1rem;">Quick Specifications</h4>
+                <div class="specs-list" style="display: grid; gap: 0.75rem;">
+                    {% if product.specifications %}
+                    {% for key, value in product.specifications_as_dict.items|slice:":10" %}
+                    <div
+                        style="display: flex; justify-content: space-between; border-bottom: 1px dashed var(--light-gray); padding-bottom: 0.5rem;">
+                        <span style="color: var(--gray);">{{ key }}:</span>
+                        <span style="font-weight: 500; text-align: right;">{{ value|truncatechars:30 }}</span>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    {% for spec in product.get_quick_specs %}
+                    <div
+                        style="display: flex; justify-content: space-between; border-bottom: 1px dashed var(--light-gray); padding-bottom: 0.5rem;">
+                        <span style="color: var(--gray);">{{ spec.0 }}:</span>
+                        <span style="font-weight: 500; text-align: right;">{{ spec.1 }}</span>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+                <a href="#specifications" class="btn btn-outline" style="width: 100%; margin-top: 1rem;">
+                    <i class="fas fa-list"></i> View All Specifications
+                </a>
+            </div>
+
+            <!-- Related Products (Small) -->
+            {% if related_products %}
+            <div class="related-products"
+                style="background: white; padding: 1.5rem; border-radius: var(--border-radius); box-shadow: var(--box-shadow);">
+                <h4 style="margin-bottom: 1rem;">Related Products</h4>
+                <div class="related-list" style="display: grid; gap: 1rem;">
+                    {% for related in related_products|slice:":3" %}
+                    <a href="{% url 'product_detail' related.slug %}" style="text-decoration: none; color: inherit;">
+                        <div class="related-item"
+                            style="display: flex; gap: 1rem; padding: 0.75rem; border: 1px solid var(--light-gray); border-radius: 4px; transition: var(--transition);">
+                            <div style="width: 60px; height: 60px; flex-shrink: 0;">
+                                {% if related.image %}
+                                <img src="{{ related.image.url }}" alt="{{ related.name }}"
+                                    style="width: 100%; height: 100%; object-fit: contain;">
+                                {% else %}
+                                <div
+                                    style="width: 100%; height: 100%; background: var(--light-gray); display: flex; align-items: center; justify-content: center;">
+                                    <i class="fas fa-box" style="color: var(--gray);"></i>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <div style="flex: 1;">
+                                <div style="font-size: 0.9rem; font-weight: 500; margin-bottom: 0.25rem;">{{
+                                    related.name|truncatechars:40 }}</div>
+                                <div style="font-size: 0.9rem; color: var(--primary); font-weight: 600;">৳{{
+                                    related.price|intcomma }}</div>
+                            </div>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Product Details Tabs -->
+    <div class="product-tabs" style="margin-top: 3rem;">
+        <div class="tabs-header" style="border-bottom: 2px solid var(--light-gray);">
+            <div class="tabs-nav" style="display: flex; gap: 2rem; overflow-x: auto;">
+                <button class="tab-btn active" onclick="openTab('description')">Description</button>
+                <button class="tab-btn" onclick="openTab('specifications')">Specifications</button>
+                <button class="tab-btn" onclick="openTab('reviews')">Reviews ({{ product.review_count }})</button>
+                <button class="tab-btn" onclick="openTab('faq')">FAQ</button>
+                <button class="tab-btn" onclick="openTab('warranty')">Warranty & Support</button>
+            </div>
+        </div>
+
+        <div class="tabs-content">
+            <!-- Description Tab -->
+            <div id="description-tab" class="tab-content active" style="padding: 2rem 0;">
+                <h3 style="margin-bottom: 1.5rem;">Product Description</h3>
+                <div class="product-description" style="line-height: 1.8; color: var(--dark);">
+                    {{ product.description|safe|linebreaks }}
+                </div>
+            </div>
+
+            <!-- Specifications Tab -->
+            <div id="specifications-tab" class="tab-content" style="padding: 2rem 0; display: none;">
+                <h3 style="margin-bottom: 1.5rem;">Full Specifications</h3>
+                <div class="specifications-table"
+                    style="background: white; border-radius: var(--border-radius); overflow: hidden; box-shadow: var(--box-shadow);">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <tbody>
+                            {% if product.specifications %}
+                            {% for key, value in product.specifications_as_dict.items %}
+                            <tr style="border-bottom: 1px solid var(--light-gray);">
+                                <td style="padding: 1rem; width: 30%; background: #f8f9fa; font-weight: 600;">{{ key }}
+                                </td>
+                                <td style="padding: 1rem;">{{ value }}</td>
+                            </tr>
+                            {% endfor %}
+                            {% else %}
+                            {% for spec in product.get_full_specs %}
+                            <tr style="border-bottom: 1px solid var(--light-gray);">
+                                <td style="padding: 1rem; width: 30%; background: #f8f9fa; font-weight: 600;">{{ spec.0
+                                    }}</td>
+                                <td style="padding: 1rem;">{{ spec.1 }}</td>
+                            </tr>
+                            {% endfor %}
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Reviews Tab -->
+            <div id="reviews-tab" class="tab-content" style="padding: 2rem 0; display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 2rem;">
+                    <div>
+                        <h3 style="margin-bottom: 0.5rem;">Customer Reviews</h3>
+                        <div class="overall-rating" style="display: flex; align-items: center; gap: 1rem;">
+                            <div style="font-size: 3rem; font-weight: 700; color: var(--primary);">{{
+                                product.rating|floatformat:1 }}</div>
+                            <div>
+                                <div class="stars" style="color: #ffc107; font-size: 1.25rem;">
+                                    {% for i in "12345" %}
+                                    <i
+                                        class="fas fa-star {% if forloop.counter <= product.rating %}fas{% else %}far{% endif %}"></i>
+                                    {% endfor %}
+                                </div>
+                                <div style="color: var(--gray);">{{ product.review_count }} reviews</div>
+                            </div>
+                        </div>
+                    </div>
+                    <button onclick="showReviewForm()" class="btn btn-primary">
+                        <i class="fas fa-edit"></i> Write a Review
+                    </button>
+                </div>
+
+                <!-- Review Form (Hidden by default) -->
+                <div id="review-form"
+                    style="display: none; background: #f8f9fa; padding: 2rem; border-radius: var(--border-radius); margin-bottom: 2rem;">
+                    <h4 style="margin-bottom: 1rem;">Write Your Review</h4>
+                    <form id="reviewForm">
+                        <div class="form-group" style="margin-bottom: 1rem;">
+                            <label for="rating">Rating</label>
+                            <div class="rating-input" style="font-size: 1.5rem; color: #ffc107;">
+                                {% for i in "12345" %}
+                                <i class="far fa-star" onclick="setRating({{ forloop.counter }})"
+                                    id="star-{{ forloop.counter }}" style="cursor: pointer;"></i>
+                                {% endfor %}
+                            </div>
+                            <input type="hidden" id="rating-value" name="rating" value="5">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 1rem;">
+                            <label for="review-title">Title</label>
+                            <input type="text" id="review-title" class="form-control"
+                                placeholder="Summarize your experience">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 1rem;">
+                            <label for="review-text">Review</label>
+                            <textarea id="review-text" class="form-control" rows="4"
+                                placeholder="Share your experience with this product"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit Review</button>
+                        <button type="button" onclick="hideReviewForm()" class="btn btn-outline">Cancel</button>
+                    </form>
+                </div>
+
+                <!-- Reviews List -->
+                <div class="reviews-list">
+                    {% if reviews %}
+                    {% for review in reviews %}
+                    <div class="review-item" style="border-bottom: 1px solid var(--light-gray); padding: 1.5rem 0;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <div style="font-weight: 600;">{{ review.user.username }}</div>
+                            <div style="color: var(--gray); font-size: 0.9rem;">{{ review.created_at|date:"F d, Y" }}
+                            </div>
+                        </div>
+                        <div class="stars" style="color: #ffc107; margin-bottom: 0.5rem;">
+                            {% for i in "12345" %}
+                            <i
+                                class="fas fa-star {% if forloop.counter <= review.rating %}fas{% else %}far{% endif %}"></i>
+                            {% endfor %}
+                        </div>
+                        <h5 style="margin-bottom: 0.5rem;">{{ review.title }}</h5>
+                        <p style="color: var(--dark);">{{ review.content }}</p>
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <div style="text-align: center; padding: 3rem; color: var(--gray);">
+                        <i class="fas fa-comments" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                        <h4>No Reviews Yet</h4>
+                        <p>Be the first to review this product!</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- FAQ Tab -->
+            <div id="faq-tab" class="tab-content" style="padding: 2rem 0; display: none;">
+                <h3 style="margin-bottom: 1.5rem;">Frequently Asked Questions</h3>
+                <div class="faq-list">
+                    {% for faq in faqs %}
+                    <div class="faq-item"
+                        style="margin-bottom: 1rem; border: 1px solid var(--light-gray); border-radius: var(--border-radius); overflow: hidden;">
+                        <div class="faq-question"
+                            style="padding: 1rem; background: #f8f9fa; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+                            {{ faq.question }}
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer" style="padding: 1rem; display: none;">{{ faq.answer }}</div>
+                    </div>
+                    {% empty %}
+                    <div style="text-align: center; padding: 2rem; color: var(--gray);">
+                        <i class="fas fa-question-circle" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                        <h4>No FAQs Available</h4>
+                        <p>Please contact our support team for any questions.</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Warranty Tab -->
+            <div id="warranty-tab" class="tab-content" style="padding: 2rem 0; display: none;">
+                <h3 style="margin-bottom: 1.5rem;">Warranty & Support</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+                    <div>
+                        <h4 style="margin-bottom: 1rem;">Warranty Information</h4>
+                        <div
+                            style="background: white; padding: 1.5rem; border-radius: var(--border-radius); box-shadow: var(--box-shadow);">
+                            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                                <i class="fas fa-shield-alt" style="font-size: 2rem; color: var(--primary);"></i>
+                                <div>
+                                    <div style="font-size: 1.5rem; font-weight: 600;">{{ product.warranty|default:"1
+                                        Year" }}</div>
+                                    <div style="color: var(--gray);">Official Warranty</div>
+                                </div>
+                            </div>
+                            <ul style="color: var(--dark); padding-left: 1.5rem;">
+                                <li>Warranty valid from date of purchase</li>
+                                <li>Service centers available nationwide</li>
+                                <li>Carry-in service at authorized centers</li>
+                                <li>Original invoice required for warranty claims</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="margin-bottom: 1rem;">Support Information</h4>
+                        <div
+                            style="background: white; padding: 1.5rem; border-radius: var(--border-radius); box-shadow: var(--box-shadow);">
+                            <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                                <i class="fas fa-headset" style="font-size: 2rem; color: var(--secondary);"></i>
+                                <div>
+                                    <div style="font-size: 1.5rem; font-weight: 600;">24/7 Support</div>
+                                    <div style="color: var(--gray);">Technical Assistance</div>
+                                </div>
+                            </div>
+                            <div style="color: var(--dark);">
+                                <p><strong>Email:</strong> support@pcnexus.com</p>
+                                <p><strong>Phone:</strong> +880 9610-123456</p>
+                                <p><strong>Live Chat:</strong> Available on website</p>
+                                <p><strong>Service Hours:</strong> 9 AM - 8 PM (Daily)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recently Viewed -->
+    {% if recently_viewed %}
+    <div class="recently-viewed" style="margin-top: 4rem;">
+        <h3 style="margin-bottom: 1.5rem;">Recently Viewed</h3>
+        <div class="recent-products"
+            style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem;">
+            {% for product in recently_viewed %}
+            <a href="{% url 'product_detail' product.slug %}" style="text-decoration: none; color: inherit;">
+                <div class="product-card"
+                    style="background: white; border-radius: var(--border-radius); box-shadow: var(--box-shadow); overflow: hidden; transition: var(--transition);">
+                    <div style="padding: 1rem; text-align: center;">
+                        {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}"
+                            style="width: 100%; height: 150px; object-fit: contain;">
+                        {% else %}
+                        <div
+                            style="width: 100%; height: 150px; background: var(--light-gray); display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-box" style="font-size: 2rem; color: var(--gray);"></i>
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div style="padding: 1rem;">
+                        <div
+                            style="font-size: 0.9rem; font-weight: 500; margin-bottom: 0.5rem; height: 2.5rem; overflow: hidden;">
+                            {{ product.name }}</div>
+                        <div style="color: var(--primary); font-weight: 600;">৳{{ product.price|intcomma }}</div>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    .product-detail-layout {
+        display: grid;
+        grid-template-columns: 1fr 2fr 1fr;
+        gap: 2rem;
+        margin: 2rem 0;
+    }
+
+    .breadcrumb a {
+        color: var(--primary);
+        text-decoration: none;
+    }
+
+    .breadcrumb a:hover {
+        text-decoration: underline;
+    }
+
+    .product-images {
+        position: sticky;
+        top: 100px;
+        height: fit-content;
+    }
+
+    .thumbnail.active {
+        border-color: var(--primary) !important;
+    }
+
+    .tab-btn {
+        padding: 1rem 0;
+        background: none;
+        border: none;
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--gray);
+        border-bottom: 3px solid transparent;
+        cursor: pointer;
+        white-space: nowrap;
+    }
+
+    .tab-btn.active {
+        color: var(--primary);
+        border-bottom-color: var(--primary);
+    }
+
+    .tab-content {
+        display: none;
+    }
+
+    .tab-content.active {
+        display: block;
+    }
+
+    .quantity-btn:hover {
+        background: var(--light-gray-dark) !important;
+    }
+
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    .badge {
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    @media (max-width: 1200px) {
+        .product-detail-layout {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .product-sidebar {
+            grid-column: span 2;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .product-detail-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .product-sidebar {
+            grid-column: span 1;
+        }
+
+        .action-buttons {
+            flex-direction: column;
+        }
+
+        .action-buttons button {
+            width: 100%;
+        }
+
+        .tabs-nav {
+            gap: 1rem;
+            padding-bottom: 0.5rem;
+        }
+
+        .tab-btn {
+            padding: 0.5rem 0;
+            font-size: 0.9rem;
+        }
+    }
+</style>
+
+<script>
+    let currentQuantity = 1;
+    let userRating = 5;
+
+    function changeImage(imageUrl) {
+        document.getElementById('main-product-image').src = imageUrl;
+        document.querySelectorAll('.thumbnail').forEach(thumb => {
+            thumb.style.borderColor = 'transparent';
+        });
+        event.target.closest('.thumbnail').style.borderColor = 'var(--primary)';
+    }
+
+    function increaseQuantity() {
+        const max = parseInt(document.getElementById('quantity').max);
+        if (currentQuantity < max) {
+            currentQuantity++;
+            document.getElementById('quantity').value = currentQuantity;
+        }
+    }
+
+    function decreaseQuantity() {
+        if (currentQuantity > 1) {
+            currentQuantity--;
+            document.getElementById('quantity').value = currentQuantity;
+        }
+    }
+
+    document.getElementById('quantity').addEventListener('input', function () {
+        const max = parseInt(this.max);
+        const min = parseInt(this.min);
+        let value = parseInt(this.value);
+
+        if (isNaN(value)) value = min;
+        if (value < min) value = min;
+        if (value > max) value = max;
+
+        this.value = value;
+        currentQuantity = value;
+    });
+
+    function addToCart(productId) {
+        const quantity = currentQuantity;
+        // Implement cart functionality
+        fetch('/api/add-to-cart/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify({
+                product_id: productId,
+                quantity: quantity
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast('Product added to cart!', 'success');
+                    updateCartCount(data.cart_count);
+                } else {
+                    showToast(data.error || 'Failed to add to cart', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('Network error. Please try again.', 'error');
+            });
+    }
+
+    function buyNow(productId) {
+        const quantity = currentQuantity;
+        // Redirect to checkout with this product
+        window.location.href = `/checkout/?product=${productId}&quantity=${quantity}`;
+    }
+
+    function addToWishlist(productId) {
+        fetch('/api/add-to-wishlist/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify({ product_id: productId })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast('Added to wishlist!', 'success');
+                    event.target.innerHTML = '<i class="fas fa-heart"></i>';
+                    event.target.classList.add('text-danger');
+                } else {
+                    showToast(data.error || 'Failed to add to wishlist', 'error');
+                }
+            });
+    }
+
+    function requestNotification(productId) {
+        const email = prompt('Enter your email to get notified when this product is back in stock:');
+        if (email) {
+            fetch('/api/request-notification/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({
+                    product_id: productId,
+                    email: email
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showToast('You will be notified when this product is back in stock!', 'success');
+                    } else {
+                        showToast(data.error || 'Failed to submit request', 'error');
+                    }
+                });
+        }
+    }
+
+    function contactForPreorder() {
+        window.location.href = '/contact/?subject=Pre-order for {{ product.name }}';
+    }
+
+    function contactSeller() {
+        window.open('/contact/?seller=true', '_blank');
+    }
+
+    function openTab(tabName) {
+        // Hide all tabs
+        document.querySelectorAll('.tab-content').forEach(tab => {
+            tab.style.display = 'none';
+        });
+
+        // Remove active class from all buttons
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+
+        // Show selected tab
+        document.getElementById(`${tabName}-tab`).style.display = 'block';
+
+        // Add active class to clicked button
+        event.target.classList.add('active');
+    }
+
+    function showReviewForm() {
+        document.getElementById('review-form').style.display = 'block';
+        window.scrollTo({ top: document.getElementById('reviews-tab').offsetTop, behavior: 'smooth' });
+    }
+
+    function hideReviewForm() {
+        document.getElementById('review-form').style.display = 'none';
+    }
+
+    function setRating(rating) {
+        userRating = rating;
+        document.getElementById('rating-value').value = rating;
+
+        // Update star display
+        for (let i = 1; i <= 5; i++) {
+            const star = document.getElementById(`star-${i}`);
+            if (i <= rating) {
+                star.className = 'fas fa-star';
+            } else {
+                star.className = 'far fa-star';
+            }
+        }
+    }
+
+    // FAQ Accordion
+    document.querySelectorAll('.faq-question').forEach(question => {
+        question.addEventListener('click', function () {
+            const answer = this.nextElementSibling;
+            const icon = this.querySelector('i');
+
+            if (answer.style.display === 'block') {
+                answer.style.display = 'none';
+                icon.className = 'fas fa-chevron-down';
+            } else {
+                document.querySelectorAll('.faq-answer').forEach(ans => {
+                    ans.style.display = 'none';
+                });
+                document.querySelectorAll('.faq-question i').forEach(i => {
+                    i.className = 'fas fa-chevron-down';
+                });
+
+                answer.style.display = 'block';
+                icon.className = 'fas fa-chevron-up';
+            }
+        });
+    });
+
+    // Helper functions
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    function showToast(message, type = 'info') {
+        // Create toast element
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+        toast.innerHTML = `
+        <div>${message}</div>
+        <button onclick="this.parentElement.remove()">&times;</button>
+    `;
+        toast.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 1rem 1.5rem;
+        background: ${type === 'success' ? '#28a745' : type === 'error' ? '#dc3545' : '#17a2b8'};
+        color: white;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    `;
+
+        document.body.appendChild(toast);
+
+        // Auto remove after 3 seconds
+        setTimeout(() => {
+            if (toast.parentElement) {
+                toast.remove();
+            }
+        }, 3000);
+    }
+
+    function updateCartCount(count) {
+        const cartCount = document.querySelector('.cart-count');
+        if (cartCount) {
+            cartCount.textContent = count;
+            cartCount.style.display = count > 0 ? 'flex' : 'none';
+        }
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function () {
+        // Initialize first image as active
+        const firstThumbnail = document.querySelector('.thumbnail');
+        if (firstThumbnail) {
+            firstThumbnail.classList.add('active');
+        }
+
+        // Initialize rating stars
+        setRating(5);
+    });
+</script>
+{% endblock %}

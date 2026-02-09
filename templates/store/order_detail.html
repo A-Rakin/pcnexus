@@ -1,0 +1,245 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}Order #{{ order.order_number }} | PC Nexus Bangladesh{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb" style="margin: 2rem 0 1rem; font-size: 0.9rem;">
+        <a href="{% url 'store:home' %}">Home</a> &gt;
+        <a href="{% url 'store:account' %}">My Account</a> &gt;
+        <a href="{% url 'store:order_history' %}">Order History</a> &gt;
+        <span>Order #{{ order.order_number }}</span>
+    </nav>
+
+    <!-- Order Header -->
+    <div class="order-header" style="margin-bottom: 3rem;">
+        <div
+            style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+            <div>
+                <h1>Order #{{ order.order_number }}</h1>
+                <p class="text-muted">Placed on {{ order.created_at|date:"F d, Y h:i A" }}</p>
+            </div>
+            <div style="text-align: right;">
+                <div class="order-status">
+                    <span class="badge 
+                        {% if order.status == 'delivered' %}bg-success
+                        {% elif order.status == 'processing' %}bg-primary
+                        {% elif order.status == 'shipped' %}bg-info
+                        {% elif order.status == 'pending' %}bg-warning
+                        {% else %}bg-secondary{% endif %}"
+                        style="padding: 0.5rem 1rem; border-radius: 4px; font-size: 1rem;">
+                        {{ order.get_status_display }}
+                    </span>
+                </div>
+                <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary); margin-top: 0.5rem;">
+                    ৳{{ order.total|intcomma }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Order Details -->
+        <div class="col-md-8">
+            <!-- Order Items -->
+            <div class="order-items-card"
+                style="background: white; border-radius: var(--border-radius); box-shadow: var(--box-shadow); margin-bottom: 2rem; overflow: hidden;">
+                <div style="padding: 1.5rem; border-bottom: 1px solid var(--light-gray);">
+                    <h3 style="margin: 0;">Order Items</h3>
+                </div>
+
+                <div style="padding: 1.5rem;">
+                    {% for item in order.items.all %}
+                    <div
+                        style="display: flex; align-items: center; padding: 1rem 0; border-bottom: 1px solid var(--light-gray);">
+                        <div style="width: 80px; height: 80px; flex-shrink: 0; margin-right: 1rem;">
+                            {% if item.product and item.product.main_image %}
+                            <img src="{{ item.product.main_image.url }}" alt="{{ item.product_name }}"
+                                style="width: 100%; height: 100%; object-fit: contain;">
+                            {% else %}
+                            <div
+                                style="width: 100%; height: 100%; background: var(--light-gray); display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-box" style="font-size: 1.5rem; color: var(--gray);"></i>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div style="flex: 1;">
+                            <h5 style="margin-bottom: 0.25rem;">
+                                {% if item.product %}
+                                <a href="{% url 'store:product_detail' item.product.slug %}"
+                                    style="color: inherit; text-decoration: none;">
+                                    {{ item.product_name }}
+                                </a>
+                                {% else %}
+                                {{ item.product_name }}
+                                {% endif %}
+                            </h5>
+                            <div class="text-muted" style="font-size: 0.9rem;">Quantity: {{ item.quantity }}</div>
+                            <div class="text-muted" style="font-size: 0.9rem;">Unit Price: ৳{{ item.price|intcomma }}
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 1.25rem; font-weight: 700; color: var(--primary);">
+                                ৳{{ item.total_price|intcomma }}
+                            </div>
+                            {% if item.product and item.product.stock_quantity > 0 %}
+                            <a href="{% url 'store:product_detail' item.product.slug %}" class="btn btn-sm btn-outline"
+                                style="margin-top: 0.5rem;">
+                                Buy Again
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Order Summary -->
+                <div style="padding: 1.5rem; background: var(--light-gray);">
+                    <div style="max-width: 400px; margin-left: auto;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span>Subtotal:</span>
+                            <span>৳{{ order.subtotal|intcomma }}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span>Shipping:</span>
+                            <span>৳{{ order.shipping_cost|intcomma }}</span>
+                        </div>
+                        {% if order.discount > 0 %}
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span>Discount:</span>
+                            <span style="color: var(--success);">-৳{{ order.discount|intcomma }}</span>
+                        </div>
+                        {% endif %}
+                        <div
+                            style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; border-top: 1px solid var(--gray); padding-top: 0.5rem;">
+                            <span style="font-weight: 600;">Total:</span>
+                            <span style="font-weight: 600; color: var(--primary);">৳{{ order.total|intcomma }}</span>
+                        </div>
+                        <div
+                            style="display: flex; justify-content: space-between; margin-top: 0.5rem; font-size: 0.9rem; color: var(--gray);">
+                            <span>Payment Method:</span>
+                            <span>{{ order.get_payment_method_display }}</span>
+                        </div>
+                        <div
+                            style="display: flex; justify-content: space-between; margin-top: 0.25rem; font-size: 0.9rem; color: var(--gray);">
+                            <span>Payment Status:</span>
+                            <span>
+                                {% if order.payment_status %}
+                                <span style="color: var(--success);">Paid</span>
+                                {% else %}
+                                <span style="color: var(--warning);">Pending</span>
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Order Info Sidebar -->
+        <div class="col-md-4">
+            <!-- Customer Info -->
+            <div class="info-card"
+                style="background: white; border-radius: var(--border-radius); box-shadow: var(--box-shadow); margin-bottom: 2rem; overflow: hidden;">
+                <div style="padding: 1.5rem; border-bottom: 1px solid var(--light-gray);">
+                    <h4 style="margin: 0;">Customer Information</h4>
+                </div>
+                <div style="padding: 1.5rem;">
+                    <div style="margin-bottom: 1rem;">
+                        <div style="font-weight: 600; margin-bottom: 0.25rem;">Name</div>
+                        <div>{{ order.customer_name }}</div>
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <div style="font-weight: 600; margin-bottom: 0.25rem;">Email</div>
+                        <div>{{ order.customer_email }}</div>
+                    </div>
+                    <div style="margin-bottom: 1rem;">
+                        <div style="font-weight: 600; margin-bottom: 0.25rem;">Phone</div>
+                        <div>{{ order.customer_phone }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Shipping Info -->
+            <div class="info-card"
+                style="background: white; border-radius: var(--border-radius); box-shadow: var(--box-shadow); margin-bottom: 2rem; overflow: hidden;">
+                <div style="padding: 1.5rem; border-bottom: 1px solid var(--light-gray);">
+                    <h4 style="margin: 0;">Shipping Address</h4>
+                </div>
+                <div style="padding: 1.5rem;">
+                    <div style="margin-bottom: 0.5rem;">
+                        <div style="font-weight: 600;">Address</div>
+                        <div>{{ order.address }}</div>
+                    </div>
+                    <div style="margin-bottom: 0.5rem;">
+                        <div style="font-weight: 600;">Upazila/District</div>
+                        <div>{{ order.upazila }}, {{ order.district }}</div>
+                    </div>
+                    <div style="margin-bottom: 0.5rem;">
+                        <div style="font-weight: 600;">Division</div>
+                        <div>{{ order.division }}</div>
+                    </div>
+                    {% if order.postal_code %}
+                    <div>
+                        <div style="font-weight: 600;">Postal Code</div>
+                        <div>{{ order.postal_code }}</div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Order Actions -->
+            <div class="info-card"
+                style="background: white; border-radius: var(--border-radius); box-shadow: var(--box-shadow); overflow: hidden;">
+                <div style="padding: 1.5rem; border-bottom: 1px solid var(--light-gray);">
+                    <h4 style="margin: 0;">Order Actions</h4>
+                </div>
+                <div style="padding: 1.5rem;">
+                    <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                        <a href="{% url 'store:order_history' %}" class="btn btn-outline">
+                            <i class="fas fa-arrow-left"></i> Back to Orders
+                        </a>
+                        <a href="{% url 'store:account' %}" class="btn btn-outline">
+                            <i class="fas fa-user"></i> My Account
+                        </a>
+                        {% if order.status == 'delivered' %}
+                        <button class="btn btn-primary">
+                            <i class="fas fa-redo"></i> Reorder All Items
+                        </button>
+                        {% endif %}
+                        {% if order.status == 'pending' %}
+                        <button class="btn btn-danger">
+                            <i class="fas fa-times"></i> Cancel Order
+                        </button>
+                        {% endif %}
+                        <a href="{% url 'store:support' %}?order={{ order.order_number }}" class="btn btn-outline">
+                            <i class="fas fa-headset"></i> Contact Support
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        font-size: 0.8rem;
+        font-weight: 600;
+        border-radius: 4px;
+    }
+
+    .info-card {
+        transition: var(--transition);
+    }
+
+    .info-card:hover {
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1) !important;
+    }
+</style>
+{% endblock %}

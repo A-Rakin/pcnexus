@@ -1,0 +1,347 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}My Account | PC Nexus Bangladesh{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb" style="margin: 2rem 0 1rem; font-size: 0.9rem;">
+        <a href="{% url 'store:home' %}">Home</a> &gt;
+        <span>My Account</span>
+    </nav>
+
+    <!-- Account Header -->
+    <div class="account-header" style="margin-bottom: 3rem;">
+        <h1>Welcome, {{ user.username }}</h1>
+        <p class="text-muted">Manage your account, orders, and wishlist</p>
+    </div>
+
+    <div class="row">
+        <!-- Sidebar Navigation -->
+        <div class="col-md-3">
+            <div class="account-sidebar"
+                style="background: white; border-radius: var(--border-radius); box-shadow: var(--box-shadow); padding: 1.5rem; margin-bottom: 2rem;">
+                <div class="user-info" style="text-align: center; margin-bottom: 2rem;">
+                    <div
+                        style="width: 80px; height: 80px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 1rem;">
+                        {{ user.username|first|upper }}
+                    </div>
+                    <h5 style="margin-bottom: 0.25rem;">{{ user.get_full_name|default:user.username }}</h5>
+                    <p class="text-muted" style="font-size: 0.9rem;">{{ user.email }}</p>
+                </div>
+
+                <nav class="account-nav">
+                    <ul style="list-style: none; padding: 0; margin: 0;">
+                        <li style="margin-bottom: 0.5rem;">
+                            <a href="{% url 'store:account' %}"
+                                style="display: block; padding: 0.75rem 1rem; text-decoration: none; color: var(--dark); background: var(--light-gray); border-radius: 4px;">
+                                <i class="fas fa-user-circle"></i> Account Overview
+                            </a>
+                        </li>
+                        <li style="margin-bottom: 0.5rem;">
+                            <a href="{% url 'store:order_history' %}"
+                                style="display: block; padding: 0.75rem 1rem; text-decoration: none; color: var(--dark); border-radius: 4px;">
+                                <i class="fas fa-shopping-bag"></i> Order History
+                            </a>
+                        </li>
+                        <li style="margin-bottom: 0.5rem;">
+                            <a href="{% url 'store:wishlist' %}"
+                                style="display: block; padding: 0.75rem 1rem; text-decoration: none; color: var(--dark); border-radius: 4px;">
+                                <i class="fas fa-heart"></i> Wishlist
+                            </a>
+                        </li>
+                        <li style="margin-bottom: 0.5rem;">
+                            <a href="{% url 'store:user_logout' %}"
+                                style="display: block; padding: 0.75rem 1rem; text-decoration: none; color: var(--danger); border-radius: 4px;">
+                                <i class="fas fa-sign-out-alt"></i> Logout
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-9">
+            <!-- Account Overview -->
+            <div class="account-overview" style="margin-bottom: 3rem;">
+                <h3 style="margin-bottom: 1.5rem;">Account Overview</h3>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <div class="stat-card"
+                            style="background: white; padding: 1.5rem; border-radius: var(--border-radius); box-shadow: var(--box-shadow); text-align: center;">
+                            <div style="font-size: 2.5rem; color: var(--primary); margin-bottom: 0.5rem;">
+                                <i class="fas fa-shopping-bag"></i>
+                            </div>
+                            <h4 style="margin-bottom: 0.5rem;">{{ orders.count }}</h4>
+                            <p style="color: var(--gray); margin: 0;">Total Orders</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <div class="stat-card"
+                            style="background: white; padding: 1.5rem; border-radius: var(--border-radius); box-shadow: var(--box-shadow); text-align: center;">
+                            <div style="font-size: 2.5rem; color: var(--success); margin-bottom: 0.5rem;">
+                                <i class="fas fa-shipping-fast"></i>
+                            </div>
+                            <h4 style="margin-bottom: 0.5rem;">
+                                {{ orders|length }}
+                            </h4>
+                            <p style="color: var(--gray); margin: 0;">Active Orders</p>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <div class="stat-card"
+                            style="background: white; padding: 1.5rem; border-radius: var(--border-radius); box-shadow: var(--box-shadow); text-align: center;">
+                            <div style="font-size: 2.5rem; color: var(--warning); margin-bottom: 0.5rem;">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <h4 style="margin-bottom: 0.5rem;">{{ wishlist.products.count }}</h4>
+                            <p style="color: var(--gray); margin: 0;">Wishlist Items</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Orders -->
+            <div class="recent-orders" style="margin-bottom: 3rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h3 style="margin: 0;">Recent Orders</h3>
+                    <a href="{% url 'store:order_history' %}" class="btn btn-outline btn-sm">View All</a>
+                </div>
+
+                {% if orders %}
+                <div class="orders-table"
+                    style="background: white; border-radius: var(--border-radius); box-shadow: var(--box-shadow); overflow: hidden;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead style="background: var(--light-gray);">
+                            <tr>
+                                <th style="padding: 1rem; text-align: left;">Order #</th>
+                                <th style="padding: 1rem; text-align: left;">Date</th>
+                                <th style="padding: 1rem; text-align: left;">Total</th>
+                                <th style="padding: 1rem; text-align: left;">Status</th>
+                                <th style="padding: 1rem; text-align: left;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in orders %}
+                            <tr style="border-bottom: 1px solid var(--light-gray);">
+                                <td style="padding: 1rem;">#{{ order.order_number }}</td>
+                                <td style="padding: 1rem;">{{ order.created_at|date:"M d, Y" }}</td>
+                                <td style="padding: 1rem;">৳{{ order.total|intcomma }}</td>
+                                <td style="padding: 1rem;">
+                                    <span class="badge 
+                                        {% if order.status == 'delivered' %}bg-success
+                                        {% elif order.status == 'processing' %}bg-primary
+                                        {% elif order.status == 'shipped' %}bg-info
+                                        {% elif order.status == 'pending' %}bg-warning
+                                        {% else %}bg-secondary{% endif %}"
+                                        style="padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.8rem;">
+                                        {{ order.get_status_display }}
+                                    </span>
+                                </td>
+                                <td style="padding: 1rem;">
+                                    <a href="{% url 'store:order_detail' order.order_number %}"
+                                        class="btn btn-sm btn-outline">
+                                        View Details
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div
+                    style="background: white; padding: 3rem; border-radius: var(--border-radius); box-shadow: var(--box-shadow); text-align: center;">
+                    <i class="fas fa-shopping-bag"
+                        style="font-size: 3rem; color: var(--light-gray); margin-bottom: 1rem;"></i>
+                    <h4>No Orders Yet</h4>
+                    <p class="text-muted">You haven't placed any orders yet.</p>
+                    <a href="{% url 'store:product_list' %}" class="btn btn-primary">Start Shopping</a>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Account Information -->
+            <div class="account-info">
+                <h3 style="margin-bottom: 1.5rem;">Account Information</h3>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="info-card"
+                            style="background: white; padding: 1.5rem; border-radius: var(--border-radius); box-shadow: var(--box-shadow); height: 100%;">
+                            <h4 style="margin-bottom: 1rem; color: var(--primary);">
+                                <i class="fas fa-user"></i> Personal Information
+                            </h4>
+                            <div style="margin-bottom: 1rem;">
+                                <div style="font-weight: 600; margin-bottom: 0.25rem;">Full Name</div>
+                                <div>{{ user.get_full_name|default:"Not set" }}</div>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <div style="font-weight: 600; margin-bottom: 0.25rem;">Username</div>
+                                <div>{{ user.username }}</div>
+                            </div>
+                            <div>
+                                <div style="font-weight: 600; margin-bottom: 0.25rem;">Email</div>
+                                <div>{{ user.email }}</div>
+                            </div>
+                            <button class="btn btn-outline btn-sm" style="margin-top: 1rem;">Edit Profile</button>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div class="info-card"
+                            style="background: white; padding: 1.5rem; border-radius: var(--border-radius); box-shadow: var(--box-shadow); height: 100%;">
+                            <h4 style="margin-bottom: 1rem; color: var(--primary);">
+                                <i class="fas fa-shopping-cart"></i> Shopping Stats
+                            </h4>
+                            <div style="margin-bottom: 1rem;">
+                                <div style="font-weight: 600; margin-bottom: 0.25rem;">Member Since</div>
+                                <div>{{ user.date_joined|date:"F d, Y" }}</div>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <div style="font-weight: 600; margin-bottom: 0.25rem;">Last Login</div>
+                                <div>{{ user.last_login|date:"F d, Y h:i A"|default:"Never" }}</div>
+                            </div>
+                            <div>
+                                <div style="font-weight: 600; margin-bottom: 0.25rem;">Account Type</div>
+                                <div>
+                                    {% if user.is_staff %}
+                                    <span class="badge bg-primary">Staff</span>
+                                    {% else %}
+                                    <span class="badge bg-secondary">Regular Customer</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions" style="margin-top: 3rem;">
+                <h3 style="margin-bottom: 1.5rem;">Quick Actions</h3>
+
+                <div class="row">
+                    <div class="col-md-3 col-6 mb-3">
+                        <a href="{% url 'store:pc_builder' %}" style="text-decoration: none;">
+                            <div class="action-card"
+                                style="background: white; padding: 1.5rem; border-radius: var(--border-radius); box-shadow: var(--box-shadow); text-align: center; transition: var(--transition);">
+                                <div style="font-size: 2rem; color: var(--primary); margin-bottom: 0.5rem;">
+                                    <i class="fas fa-desktop"></i>
+                                </div>
+                                <div style="font-weight: 600;">PC Builder</div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="col-md-3 col-6 mb-3">
+                        <a href="{% url 'store:wishlist' %}" style="text-decoration: none;">
+                            <div class="action-card"
+                                style="background: white; padding: 1.5rem; border-radius: var(--border-radius); box-shadow: var(--box-shadow); text-align: center; transition: var(--transition);">
+                                <div style="font-size: 2rem; color: var(--danger); margin-bottom: 0.5rem;">
+                                    <i class="fas fa-heart"></i>
+                                </div>
+                                <div style="font-weight: 600;">Wishlist</div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="col-md-3 col-6 mb-3">
+                        <a href="{% url 'store:cart_view' %}" style="text-decoration: none;">
+                            <div class="action-card"
+                                style="background: white; padding: 1.5rem; border-radius: var(--border-radius); box-shadow: var(--box-shadow); text-align: center; transition: var(--transition);">
+                                <div style="font-size: 2rem; color: var(--success); margin-bottom: 0.5rem;">
+                                    <i class="fas fa-shopping-cart"></i>
+                                </div>
+                                <div style="font-weight: 600;">Cart</div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="col-md-3 col-6 mb-3">
+                        <a href="{% url 'store:support' %}" style="text-decoration: none;">
+                            <div class="action-card"
+                                style="background: white; padding: 1.5rem; border-radius: var(--border-radius); box-shadow: var(--box-shadow); text-align: center; transition: var(--transition);">
+                                <div style="font-size: 2rem; color: var(--warning); margin-bottom: 0.5rem;">
+                                    <i class="fas fa-headset"></i>
+                                </div>
+                                <div style="font-weight: 600;">Support</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .account-header h1 {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .account-nav a {
+        transition: var(--transition);
+    }
+
+    .account-nav a:hover {
+        background: var(--light-gray-dark) !important;
+        color: var(--primary) !important;
+    }
+
+    .account-nav a.active {
+        background: var(--primary) !important;
+        color: white !important;
+    }
+
+    .stat-card,
+    .info-card,
+    .action-card {
+        transition: var(--transition);
+    }
+
+    .stat-card:hover,
+    .info-card:hover,
+    .action-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .action-card:hover {
+        background: var(--light-gray) !important;
+    }
+
+    .orders-table table {
+        min-width: 600px;
+    }
+
+    .badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        font-size: 0.8rem;
+        font-weight: 600;
+        border-radius: 4px;
+    }
+
+    @media (max-width: 768px) {
+        .account-header h1 {
+            font-size: 1.75rem;
+        }
+
+        .orders-table {
+            overflow-x: auto;
+        }
+
+        .action-card {
+            padding: 1rem !important;
+        }
+    }
+</style>
+{% endblock %}

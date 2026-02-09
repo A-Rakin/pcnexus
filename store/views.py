@@ -19,6 +19,30 @@ from .forms import (
     BangladeshShippingForm
 )
 
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from django.db.models import Q
+import json
+from django.core.serializers.json import DjangoJSONEncoder
+from django.core.paginator import Paginator
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+
+# Import all models - FIX THE IMPORT HERE
+from .models import (
+    Category, Product, ProductImage, Review, FAQ,  # Added ProductImage
+    Cart, CartItem, Order, OrderItem, 
+    Wishlist, BangladeshLocation, ProductReview
+)
+
+# Import forms if you have them
+from .forms import (
+    UserRegistrationForm, UserLoginForm, CheckoutForm,
+    BangladeshShippingForm
+)
+
 def home(request):
     """Home page view with featured products for Bangladesh market"""
     featured_products = Product.objects.filter(
@@ -986,3 +1010,73 @@ def category_detail(request, slug):
         'title': category.name,
     }
     return render(request, 'store/category.html', context)
+
+from django.shortcuts import render, get_object_or_404
+from django.db.models import Q
+from .models import Product, ProductImage, Review, FAQ
+import json
+
+def product_detail(request, slug):
+    product = get_object_or_404(Product, slug=slug, is_active=True)
+    
+    # Get product images
+    product_images = ProductImage.objects.filter(product=product)
+    
+    # Get related products (same category, exclude current)
+    related_products = Product.objects.filter(
+        category=product.category,
+        is_active=True
+    ).exclude(id=product.id)[:6]
+    
+    # Get product reviews
+    reviews = Review.objects.filter(product=product, is_approved=True)[:10]
+    
+    # Get FAQs for this product category
+    faqs = FAQ.objects.filter(
+        Q(product=product) | Q(category=product.category)
+    )[:10]
+    
+    # Get recently viewed products from session
+    recently_viewed = request.session.get('recently_viewed', [])
+    recently_viewed_products = Product.objects.filter(
+        id__in=recently_viewed[:4],
+        is_active=True
+    ).exclude(id=product.id)
+    
+    # Add current product to recently viewed
+    if 'recently_viewed' not in request.session:
+        request.session['recently_viewed'] = []
+    
+    # Remove if already exists and add to beginning
+    if product.id in request.session['recently_viewed']:
+        request.session['recently_viewed'].remove(product.id)
+    
+    request.session['recently_viewed'].insert(0, product.id)
+    
+    # Keep only last 10 products
+    request.session['recently_viewed'] = request.session['recently_viewed'][:10]
+    request.session.modified = True
+    
+    # Calculate discount if old price exists
+    if product.old_price and product.old_price > product.price:
+        discount_amount = product.old_price - product.price
+        discount_percentage = round((discount_amount / product.old_price) * 100)
+    else:
+        discount_amount = 0
+        discount_percentage = 0
+    
+    context = {
+        'product': product,
+        'product_images': product_images,
+        'related_products': related_products,
+        'reviews': reviews,
+        'faqs': faqs,
+        'recently_viewed': recently_viewed_products,
+        'discount_amount': discount_amount,
+        'discount_percentage': discount_percentage,
+        'save_amount': discount_amount,
+        'emi_amount': round(product.price / 12),  # Example EMI calculation
+        'title': f"{product.name} - ৳{product.price}",
+    }
+    
+    return render(request, 'store/product_details.html', context)
