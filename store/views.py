@@ -1080,3 +1080,9 @@ def product_detail(request, slug):
     }
     
     return render(request, 'store/product_details.html', context)
+
+def user_logout(request):
+    """User logout view"""
+    logout(request)
+    messages.success(request, 'You have been logged out.')
+    return redirect('store:home')

@@ -53,8 +53,8 @@
                             </a>
                         </li>
                         <li style="margin-bottom: 0.5rem;">
-                            <a href="{% url 'store:user_logout' %}"
-                                style="display: block; padding: 0.75rem 1rem; text-decoration: none; color: var(--danger); border-radius: 4px;">
+                            <a href="{% url 'store:logout' %}"
+                                style="display: block; padding: 0.75rem 1rem; text-decoration: none; color: #dc3545; border-radius: 4px;">
                                 <i class="fas fa-sign-out-alt"></i> Logout
                             </a>
                         </li>
@@ -253,7 +253,8 @@
                     </div>
 
                     <div class="col-md-3 col-6 mb-3">
-                        <a href="{% url 'store:cart_view' %}" style="text-decoration: none;">
+                        <a href="{% url 'store:cart' %}" style="text-decoration: none;">
+                            <!-- FIXED: Changed cart_view to cart -->
                             <div class="action-card"
                                 style="background: white; padding: 1.5rem; border-radius: var(--border-radius); box-shadow: var(--box-shadow); text-align: center; transition: var(--transition);">
                                 <div style="font-size: 2rem; color: var(--success); margin-bottom: 0.5rem;">
