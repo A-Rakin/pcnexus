@@ -2,118 +2,69 @@
 A comprehensive e-commerce platform for PC components and accessories in Bangladesh, built with Django.
 
 📋 Table of Contents
-Features
 
-Tech Stack
+✨ Main Features
+• ✅ User authentication and authorization
+• 🛒 Shopping cart with session management
+• 📱 Responsive mobile-first design
 
-Installation
+## ✨ **Core Features**
 
-Project Structure
+### 🛍️ **E-commerce Essentials**
+• **Product Catalog** - Browse by categories, brands, and filters
+• **Shopping Cart** - Session-based cart management
+• **Checkout Process** - Multiple payment methods
+• **Order Management** - Real-time status tracking
+• **Wishlist** - Save products for later
 
-Database Models
+### 🇧🇩 **Bangladesh Specific**
+• **Local Currency** - Pricing in Bangladeshi Taka (৳)
+• **Payment Gateways** - bKash, Nagad, Rocket, Cash on Delivery
+• **Shipping** - Division/District/Upazila based delivery
+• **Import Duty** - Included in pricing calculations
+• **Local Warranty** - Bangladesh-specific warranty information
 
-Key Features
+### 🛠️ **Advanced Tools**
+• **PC Builder Tool** - Component compatibility checking
+• **Product Comparison** - Side-by-side product comparison
+• **Recently Viewed** - Track browsing history
+• **Newsletter System** - Email subscriptions
+• **Store Locator** - Find physical stores in Bangladesh
 
-Screenshots
+## 🚀 **Technology Stack**
 
-API Endpoints
+### **Backend** (Python/Django)
+• Django 5.2.5 - Web framework
+• PostgreSQL - Production database
+• SQLite - Development database
+• Django ORM - Database abstraction
 
-Running Tests
+### **Frontend**
+• HTML5, CSS3, JavaScript - Core web technologies
+• Bootstrap 5 - Responsive framework
+• Font Awesome - Icons
+• Custom CSS - Theme customization
 
-Deployment
+### **Additional Tools**
+• Django Humanize - Number formatting
+• Session Management - Cart persistence
+• Django Messages - User notifications
 
-Contributing
+## 💻 **Installation Guide**
 
-License
+### **Prerequisites**
+• Python 3.13.2 or higher
+• pip (Python package manager)
+• Virtual environment (recommended)
+• PostgreSQL (optional for development)
 
-**✨ Features
-🛍️ E-commerce Features**
-Product Catalog with categories, brands, and filters
-
-Shopping Cart with session management
-
-Checkout Process with Bangladesh-specific payment methods
-
-Order Management with status tracking
-
-Wishlist functionality
-
-Product Reviews & Ratings
-
-Stock Management with low stock alerts
-
-**🇧🇩 Bangladesh Specific**
-Bangladeshi Taka (৳) pricing
-
-Localized Payment Methods (bKash, Nagad, Rocket, Cash on Delivery)
-
-Bangladesh Division/District/Upazila based shipping
-
-Import Duty Included pricing
-
-Local Warranty Information
-
-**🛠️ Advanced Features**
-PC Builder Tool with compatibility checking
-
-Product Comparison
-
-Recently Viewed Products
-
-Newsletter Subscription
-
-FAQ System
-
-Store Locator for Bangladesh
-
-Responsive Design for mobile and desktop
-
-🚀 Tech Stack
-Backend
-Django 5.2.5 - Python web framework
-
-PostgreSQL - Primary database (SQLite for development)
-
-Django ORM - Database abstraction
-
-Django Templates - Server-side rendering
-
-Frontend
-HTML5, CSS3, JavaScript - Core web technologies
-
-Bootstrap 5 - Responsive CSS framework
-
-Font Awesome - Icons
-
-Custom CSS with CSS variables
-
-JavaScript ES6+ for interactivity
-
-Additional Tools
-Django Humanize - Better number formatting
-
-Django Messages Framework - User notifications
-
-Django Authentication - User management
-
-Session Management - Cart and user sessions
-
-💻 Installation
-Prerequisites
-Python 3.13.2+
-
-PostgreSQL (optional, SQLite for development)
-
-pip (Python package manager)
-
-Virtual environment (recommended)
-
-Step-by-Step Installation
-Clone the repository
-
-``` bash
-git clone https://github.com/yourusername/pc-nexus-bangladesh.git
-cd pc-nexus-bangladesh
+### **Step-by-Step Setup**
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/yourusername/pc-nexus-bangladesh.git
+   cd pc-nexus-bangladesh
+  
+```bash
 Create virtual environment
 ```
 ```bash
@@ -151,4 +102,33 @@ Run development server
 python manage.py runserver
 Visit http://127.0.0.1:8000 to see the application.
 ```
+
+
+
+
+Screenshots:
+
+<img width="1342" height="674" alt="image" src="https://github.com/user-attachments/assets/9b7ce787-ddec-49cb-bd4b-403f68f92317" />
+
+<img width="1346" height="592" alt="image" src="https://github.com/user-attachments/assets/6f8a92fe-8a9c-4481-98d7-56b16f19a77c" />
+
+<img width="1350" height="598" alt="image" src="https://github.com/user-attachments/assets/7b9cf717-f2f1-4768-a37b-e612cf092b25" />
+
+<img width="1346" height="604" alt="image" src="https://github.com/user-attachments/assets/efd9912f-1f84-4e0f-9941-f37d81557760" />
+
+<img width="1318" height="539" alt="image" src="https://github.com/user-attachments/assets/e7e3bb0a-d5f5-45b4-84d8-5807f9ca3210" />
+
+<img width="1337" height="517" alt="image" src="https://github.com/user-attachments/assets/ed011a16-0a5a-4dae-978d-752bd2c55958" />
+
+<img width="1343" height="668" alt="image" src="https://github.com/user-attachments/assets/437110a1-45f0-4feb-abfe-e735dc605639" />
+
+<img width="1352" height="545" alt="image" src="https://github.com/user-attachments/assets/6389b651-93f3-4119-8d91-e00c55ac7e59" />
+
+<img width="1325" height="585" alt="image" src="https://github.com/user-attachments/assets/15c71d35-92be-4768-b443-d216c7473b51" />
+
+<img width="1341" height="583" alt="image" src="https://github.com/user-attachments/assets/6a0cdf0d-8a11-48b6-a1d4-5eb5d37bcd99" />
+
+<img width="1351" height="606" alt="image" src="https://github.com/user-attachments/assets/357e3fed-441d-4fef-a63d-ff064048c82e" />
+
+<img width="1334" height="585" alt="image" src="https://github.com/user-attachments/assets/5675c83a-c2d9-4d64-b027-d46ba876a28a" />
 
